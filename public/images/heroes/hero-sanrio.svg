@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B9D"/>
+      <stop offset="100%" stop-color="#E6405F"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="600" fill="url(#bg)"/>
+  <circle cx="1300" cy="150" r="80" fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="3"/>
+  <circle cx="1400" cy="450" r="120" fill="none" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="3"/>
+  <text x="120" y="200" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#FFC700">EDICIÓN LIMITADA</text>
+  <text x="120" y="300" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#FFFFFF">Sanrio para Coleccionistas</text>
+  <text x="120" y="350" font-family="Arial, sans-serif" font-size="28" fill="#FFFFFF" fill-opacity="0.9">Hello Kitty, Kuromi y más</text>
+</svg>

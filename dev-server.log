@@ -1,0 +1,381 @@
+
+> japan-world-toys@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.25
+   - Local:        http://localhost:3000
+   - Network:      http://169.254.123.136:3000
+   - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 1817ms
+ ○ Compiling /ofertas ...
+ ✓ Compiled /ofertas in 3s (913 modules)
+ GET /ofertas 200 in 3476ms
+ ✓ Compiled / in 421ms (921 modules)
+ GET / 200 in 767ms
+ GET /ofertas 200 in 407ms
+ ✓ Compiled /admin in 322ms (953 modules)
+ GET /admin 307 in 602ms
+ ✓ Compiled /login in 262ms (972 modules)
+ GET /login?callbackUrl=/admin 200 in 521ms
+ GET /login 200 in 73ms
+ ✓ Compiled /cuenta in 251ms (988 modules)
+ GET /cuenta 307 in 495ms
+ GET /login?callbackUrl=/cuenta 200 in 110ms
+ ✓ Compiled /nosotros in 225ms (998 modules)
+ GET /nosotros 200 in 449ms
+ GET /ofertas 200 in 146ms
+ ✓ Compiled /proximamente in 281ms (1000 modules)
+ GET /proximamente 200 in 523ms
+ ○ Compiling /productos ...
+ ✓ Compiled /productos in 555ms (1013 modules)
+ ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <... groups={[...]} sortOptions={[...]} onOpenMobile={function onOpenMobile}>
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>) {
+  digest: '1284931332'
+}
+ GET /productos 200 in 1055ms
+ GET /ofertas 200 in 108ms
+ GET /admin 307 in 106ms
+ GET /login?callbackUrl=/admin 200 in 86ms
+ ✓ Compiled in 665ms (969 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 118ms
+ GET /login 200 in 165ms
+ ✓ Compiled in 248ms (943 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 98ms
+ ✓ Compiled in 319ms (943 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 66ms
+ GET /login 200 in 131ms
+ ✓ Compiled in 147ms (342 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 50ms
+ ✓ Compiled in 195ms (943 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 65ms
+ GET /login 200 in 126ms
+ ✓ Compiled /admin in 128ms (627 modules)
+ GET /admin 307 in 355ms
+ GET /login?callbackUrl=/admin 200 in 104ms
+ GET /login?callbackUrl=%2Fadmin 200 in 320ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 420ms (969 modules)
+ ⨯ ReferenceError: glassInput is not defined
+    at AuthForm (src\components\forms\auth-form.tsx:60:26)
+  58 |             <input
+  59 |               type="email"
+> 60 |               className={glassInput}
+     |                          ^
+  61 |               value={form.email}
+  62 |               autoComplete="email"
+  63 |               onChange={(e) => setForm({ ...form, email: e.target.value })} {
+  digest: '172176061'
+}
+ GET /login?callbackUrl=/admin 500 in 359ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 269ms (969 modules)
+ ⨯ [Error [InvariantError]: Invariant: Expected clientReferenceManifest to be defined. This is a bug in Next.js.]
+ ⨯ [Error [InvariantError]: Invariant: Expected clientReferenceManifest to be defined. This is a bug in Next.js.] {
+  page: '/login'
+}
+ ○ Compiling /_error ...
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled /_error in 1049ms (1302 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 592ms
+ GET /login?callbackUrl=/admin 500 in 2357ms
+ GET /login 200 in 131ms
+ GET /login?callbackUrl=/admin 200 in 86ms
+ ✓ Compiled in 403ms (1290 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 113ms
+ ✓ Compiled in 334ms (1290 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 107ms
+ ✓ Compiled in 436ms (1290 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 76ms
+ GET /login 200 in 150ms
+ ✓ Compiled /api/auth/[...nextauth] in 249ms (1284 modules)
+ GET /api/auth/providers 200 in 958ms
+ GET /api/auth/csrf 200 in 21ms
+ POST /api/auth/callback/credentials? 200 in 42ms
+ ✓ Compiled /cuenta in 225ms (825 modules)
+ GET /cuenta 200 in 458ms
+ GET /cuenta 200 in 83ms
+ ✓ Compiled /cuenta/pedidos in 345ms (1310 modules)
+ GET /cuenta/pedidos 200 in 466ms
+ ✓ Compiled /cuenta/direcciones in 349ms (1315 modules)
+ GET /cuenta/direcciones 200 in 454ms
+ ✓ Compiled /wishlist in 385ms (1318 modules)
+ GET /wishlist 200 in 494ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 696ms (846 modules)
+ GET /admin 200 in 929ms
+ ✓ Compiled /admin/productos in 424ms (1344 modules)
+ GET /admin/productos 200 in 650ms
+ GET /admin 200 in 65ms
+ GET /cuenta 200 in 51ms
+ GET /wishlist 200 in 40ms
+ ✓ Compiled in 704ms (1342 modules)
+ GET /cuenta 200 in 222ms
+ ✓ Compiled in 248ms (496 modules)
+ GET /cuenta 200 in 60ms
+ ✓ Compiled in 513ms (1302 modules)
+ GET /cuenta 200 in 213ms
+ GET /admin 200 in 98ms
+ GET /admin 200 in 77ms
+ ✓ Compiled in 617ms (1316 modules)
+ GET /admin 200 in 168ms
+ ✓ Compiled in 369ms (1316 modules)
+ GET /admin 200 in 125ms
+ GET /admin 200 in 60ms
+ ✓ Compiled in 397ms (1316 modules)
+ GET /admin 200 in 124ms
+ ✓ Compiled in 419ms (1316 modules)
+ GET /admin 200 in 120ms
+ ✓ Compiled in 374ms (1316 modules)
+ GET /admin 200 in 111ms
+ ✓ Compiled in 366ms (1316 modules)
+ GET /admin 200 in 156ms
+ ✓ Compiled /admin/configuracion in 458ms (1304 modules)
+ GET /admin/configuracion 200 in 553ms
+ ✓ Compiled /admin/reportes in 456ms (1311 modules)
+ GET /admin/reportes 200 in 584ms
+ ✓ Compiled /admin/paginas in 499ms (1308 modules)
+ GET /admin/paginas 200 in 597ms
+ ✓ Compiled /admin/cupones in 363ms (1310 modules)
+ GET /admin/cupones 200 in 450ms
+ ✓ Compiled /admin/banners in 350ms (1308 modules)
+ GET /admin/banners 200 in 446ms
+ ✓ Compiled /admin/clientes in 396ms (1310 modules)
+ GET /admin/clientes 200 in 497ms
+ GET /admin/banners 200 in 38ms
+ GET /admin/cupones 200 in 37ms
+ GET /admin/clientes 200 in 34ms
+ ✓ Compiled /admin/pedidos in 456ms (1296 modules)
+ GET /admin/pedidos 200 in 553ms
+ GET /admin 200 in 62ms
+ ○ Compiling /admin/productos ...
+ ✓ Compiled /admin/productos in 533ms (826 modules)
+ GET /admin/productos 200 in 783ms
+ GET /admin/productos 200 in 50ms
+ GET /admin 200 in 87ms
+ ✓ Compiled in 334ms (492 modules)
+ GET /admin 200 in 65ms
+ ✓ Compiled in 534ms (1300 modules)
+ GET /admin 200 in 135ms
+ ✓ Compiled in 393ms (1314 modules)
+ GET /admin 200 in 114ms
+ ✓ Compiled in 534ms (1314 modules)
+ GET /admin 200 in 121ms
+ ✓ Compiled in 182ms (493 modules)
+ GET /admin 200 in 152ms
+ ✓ Compiled in 166ms (493 modules)
+ GET /admin 200 in 64ms
+ ✓ Compiled in 303ms (493 modules)
+ GET /admin 200 in 72ms
+ ✓ Compiled in 462ms (1314 modules)
+ GET /admin 200 in 124ms
+ ✓ Compiled in 388ms (1314 modules)
+ GET /admin 200 in 214ms
+ ✓ Compiled in 363ms (1314 modules)
+ GET /admin 200 in 110ms
+ ✓ Compiled in 340ms (1314 modules)
+ GET /admin 200 in 96ms
+ ✓ Compiled in 415ms (1314 modules)
+ GET /admin 200 in 133ms
+ GET /admin/productos 200 in 71ms
+ GET /admin 307 in 189ms
+ ✓ Compiled /login in 357ms (832 modules)
+ GET /login?callbackUrl=/admin 200 in 633ms
+ GET /admin/productos 200 in 357ms
+ ○ Compiling /admin/pedidos ...
+ ✓ Compiled /admin/pedidos in 854ms (834 modules)
+ GET /admin/pedidos 200 in 1034ms
+ GET /admin/pedidos 200 in 52ms
+ ✓ Compiled /admin/clientes in 240ms (836 modules)
+ GET /admin/clientes 200 in 389ms
+ GET /admin/clientes 200 in 51ms
+ GET /admin 200 in 69ms
+ GET /admin 200 in 58ms
+ GET /admin/configuracion 200 in 47ms
+ GET /admin 200 in 47ms
+ ✓ Compiled in 694ms (1316 modules)
+ GET /admin 200 in 129ms
+ ✓ Compiled in 423ms (1314 modules)
+ GET /admin 200 in 130ms
+ ✓ Compiled in 567ms (1314 modules)
+ GET /admin 200 in 179ms
+ ✓ Compiled in 243ms (493 modules)
+ GET /admin 200 in 135ms
+ ✓ Compiled in 179ms (493 modules)
+ GET /admin 200 in 63ms
+ ✓ Compiled in 166ms (493 modules)
+ GET /admin 200 in 70ms
+ ✓ Compiled in 170ms (493 modules)
+ GET /admin 200 in 65ms
+ ✓ Compiled in 196ms (493 modules)
+ GET /admin 200 in 90ms
+ ✓ Compiled in 165ms (493 modules)
+ GET /admin 200 in 64ms
+ ✓ Compiled in 560ms (1314 modules)
+ GET /admin 200 in 222ms
+ ✓ Compiled in 327ms (1314 modules)
+ GET /admin 200 in 105ms
+ GET /admin 307 in 106ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 533ms (832 modules)
+ GET /login?callbackUrl=/admin 200 in 710ms
+ ✓ Compiled in 387ms (1325 modules)
+ GET /admin 200 in 172ms
+ ✓ Compiled in 508ms (1325 modules)
+ GET /admin 200 in 113ms
+ ✓ Compiled /api/auth/[...nextauth] in 172ms (837 modules)
+ GET /api/auth/csrf 200 in 286ms
+ POST /api/auth/signout 200 in 16ms
+ ✓ Compiled / in 216ms (847 modules)
+ GET / 200 in 605ms
+ GET /admin 307 in 68ms
+ GET /login?callbackUrl=/admin 200 in 87ms
+ ✓ Compiled in 532ms (1338 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 190ms
+ ✓ Compiled in 430ms (1338 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 70ms
+ ✓ Compiled in 385ms (1338 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 62ms
+ ✓ Compiled in 510ms (1338 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 142ms
+ ✓ Compiled in 626ms (1338 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 81ms
+ GET /login 200 in 154ms
+ ✓ Compiled in 227ms (493 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 50ms
+ ✓ Compiled in 230ms (493 modules)
+ ✓ Compiled in 310ms (493 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 273ms
+ GET /login?callbackUrl=%2Fadmin 200 in 28ms
+ ✓ Compiled in 192ms (493 modules)
+ ✓ Compiled in 199ms (493 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 193ms
+ GET /login?callbackUrl=%2Fadmin 200 in 29ms
+ ✓ Compiled in 197ms (493 modules)
+ GET /login?callbackUrl=%2Fadmin 200 in 55ms
+ GET / 200 in 158ms
+ ✓ Compiled in 188ms (493 modules)
+ GET / 200 in 60ms
+ ✓ Compiled in 168ms (493 modules)
+ GET / 200 in 57ms
+ ✓ Compiled in 196ms (493 modules)
+ GET / 200 in 84ms
+ ✓ Compiled in 171ms (493 modules)
+ GET / 200 in 55ms
+ ✓ Compiled in 231ms (493 modules)
+ GET / 200 in 75ms
+ ✓ Compiled in 196ms (493 modules)
+ GET / 200 in 60ms
+ ✓ Compiled in 206ms (493 modules)
+ GET / 200 in 85ms
+ ✓ Compiled in 180ms (493 modules)
+ GET / 200 in 65ms
+ ✓ Compiled in 678ms (1324 modules)
+ GET / 200 in 254ms
+ ✓ Compiled in 417ms (1324 modules)
+ GET / 200 in 135ms
+ GET / 200 in 228ms
+ ✓ Compiled /productos in 372ms (852 modules)
+ ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <... groups={[...]} sortOptions={[...]} onOpenMobile={function onOpenMobile}>
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>) {
+  digest: '1284931332'
+}
+ ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <... groups={[...]} sortOptions={[...]} onOpenMobile={function onOpenMobile}>
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>) {
+  digest: '1284931332'
+}
+ GET /productos 200 in 828ms
+ GET /productos 200 in 328ms
+ ✓ Compiled /admin in 302ms (861 modules)
+ GET /admin 307 in 571ms
+ GET /login?callbackUrl=/admin 200 in 73ms
+ ✓ Compiled /admin/configuracion in 343ms (863 modules)
+ GET /admin/configuracion 307 in 508ms
+ GET /login?callbackUrl=/admin 200 in 62ms
+ GET /admin 307 in 79ms
+ GET /login?callbackUrl=/admin 200 in 46ms
+ ✓ Compiled /admin/clientes in 358ms (865 modules)
+ GET /admin/clientes 307 in 524ms
+ GET /login?callbackUrl=/admin 200 in 53ms
+ ✓ Compiled /admin/pedidos in 264ms (867 modules)
+ GET /admin/productos 307 in 235ms
+ GET /login?callbackUrl=/admin 200 in 55ms
+ GET / 200 in 172ms
+ ✓ Compiled in 335ms (493 modules)
+ GET / 200 in 142ms
+ ✓ Compiled in 741ms (1324 modules)
+ ⨯ ReferenceError: HeroCarousel is not defined
+    at HomePage (src\app\page.tsx:95:8)
+  93 |     <div>
+  94 |       {/* ─── HERO CAROUSEL ──────────────────────── */}
+> 95 |       <HeroCarousel />
+     |        ^
+  96 |
+  97 |       {/* ─── CATEGORIES GRID ────────────────────── */}
+  98 |       <section className="max-w-7xl mx-auto px-4 py-16"> {
+  digest: '513176210'
+}
+ GET / 200 in 137ms
+ ✓ Compiled in 693ms (1339 modules)
+ GET / 200 in 336ms
+ ⨯ ./src/app/page.tsx
+Module parse failed: Identifier 'CATEGORIES' has already been declared (87:6)
+|     }
+| ];
+> const CATEGORIES = [
+|     {
+|         nombre: "Funkos",
+
+Import trace for requested module:
+./src/app/page.tsx
+ GET / 500 in 2105ms
+ GET / 500 in 42ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET / 500 in 285ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ✓ Compiled in 1104ms (1325 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET / 200 in 957ms
+ GET / 200 in 179ms
+ GET / 200 in 152ms
+ ✓ Compiled in 797ms (1324 modules)
+ GET / 200 in 364ms
+ ✓ Compiled in 457ms (1324 modules)
+ GET / 200 in 125ms
+ ✓ Compiled in 285ms (493 modules)
+ GET / 200 in 380ms
+ ✓ Compiled in 499ms (1324 modules)
+ GET / 200 in 279ms
+ ✓ Compiled in 629ms (1324 modules)
+ GET / 200 in 120ms
+ GET / 200 in 182ms
+ ✓ Compiled in 972ms (1324 modules)
+ GET / 200 in 427ms
+ GET / 200 in 188ms
+ ✓ Compiled in 376ms (493 modules)
+ GET / 200 in 133ms
+ ✓ Compiled in 607ms (1324 modules)
+ GET / 200 in 113ms
+ GET / 200 in 195ms
+ ✓ Compiled in 722ms (1324 modules)
+ GET / 200 in 132ms
+ ○ Compiling /productos/[categoria] ...
+ ✓ Compiled /productos/[categoria] in 922ms (1328 modules)
+ GET /productos/comics 200 in 2517ms
+ GET / 200 in 89ms
+ GET / 200 in 225ms
+ GET /productos/figuras 200 in 142ms
+ ✓ Compiled /ofertas in 479ms (846 modules)
+ GET /ofertas 200 in 666ms
+ GET /ofertas 200 in 54ms

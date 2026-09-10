@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    container_name: jw-app
+    command: npm run dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://jw_user:jw_password@db:5432/japanworld?schema=public
+    env_file:
+      - .env.local
+    depends_on:
+      db:
+        condition: service_healthy
