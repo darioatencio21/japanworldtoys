@@ -97,9 +97,7 @@ function FooterColumn({
 
 export function Footer() {
   const pathname = usePathname();
-
-  if (pathname.startsWith("/admin") || pathname === "/login") return null;
-
+  // ⚠️ Los hooks SIEMPRE antes de cualquier return condicional (Rules of Hooks)
   const [openColumns, setOpenColumns] = useState<Record<ColumnKey, boolean>>({
     tienda: false,
     ayuda: false,
@@ -110,10 +108,18 @@ export function Footer() {
 
   const columnState = (key: ColumnKey) => openColumns[key];
 
+  if (pathname.startsWith("/admin") || pathname === "/login") return null;
+
   return (
-    <footer className="bg-jw-black text-white">
+    <footer className="bg-jw-black text-white relative overflow-hidden">
+      {/* Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-40 bg-[url('/images/footer/fondo-footer-mobile.webp')] md:bg-[url('/images/footer/fondo-footer.webp')]"
+        aria-hidden
+      />
+
       {/* Newsletter Banner */}
-      <div className="bg-jw-red">
+      <div className="bg-jw-red relative">
         <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <h3 className="text-xl font-bold font-[family-name:var(--font-display)]">
@@ -137,13 +143,13 @@ export function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-4 py-12 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="md:col-span-2">
             <Link href="/" className="inline-block mb-4">
               <Image
-                src="/images/logo/logo-japan-world-toys.png"
+                src="/images/logo/logo-japan-world-toys.webp"
                 alt={SITE_NAME}
                 width={180}
                 height={45}
@@ -225,21 +231,21 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/10">
+      <div className="border-t border-white/10 relative">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col items-center justify-between gap-4 text-center lg:flex-row lg:text-left">
-          <p className="text-xs text-jw-gray-500">
+          <p className="text-xs text-jw-gray-300">
             © {new Date().getFullYear()} JapanWorld Toys. Todos los derechos reservados.
           </p>
 
-          <div className="flex items-center gap-3 text-jw-gray-400 text-[11px]">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-jw-gray-300 text-[11px]">
             <Link href="/pagina/terminos-y-condiciones" className="hover:text-white transition-colors underline-offset-2 hover:underline">
               Términos
             </Link>
-            <span className="text-white/20">|</span>
+            <span className="text-white/30">|</span>
             <Link href="/pagina/politica-devoluciones" className="hover:text-white transition-colors underline-offset-2 hover:underline">
               Privacidad
             </Link>
-            <span className="text-white/20">|</span>
+            <span className="text-white/30">|</span>
             <span>Visa · Mastercard · Mercado Pago</span>
           </div>
         </div>

@@ -13,12 +13,12 @@ import { priceForUser } from "@/lib/price";
 export const dynamic = "force-dynamic";
 
 const CATEGORY_TABS: CategoryTab[] = [
-  { label: "Comics", slug: "comics", image: "/images/categorias/comics.png" },
-  { label: "Figuras", slug: "figuras", image: "/images/categorias/figuras.png" },
-  { label: "Funkos", slug: "funkos", image: "/images/categorias/funkos.png" },
-  { label: "Mangas", slug: "mangas", image: "/images/categorias/mangas.png" },
-  { label: "Peluches", slug: "peluches", image: "/images/categorias/peluches.png" },
-  { label: "Sanrio", slug: "sanrio", image: "/images/categorias/sanrio.png" },
+  { label: "Comics", slug: "comics", image: "/images/categorias/comics.webp" },
+  { label: "Figuras", slug: "figuras", image: "/images/categorias/figuras.webp" },
+  { label: "Funkos", slug: "funkos", image: "/images/categorias/funkos.webp" },
+  { label: "Mangas", slug: "mangas", image: "/images/categorias/mangas.webp" },
+  { label: "Peluches", slug: "peluches", image: "/images/categorias/peluches.webp" },
+  { label: "Sanrio", slug: "sanrio", image: "/images/categorias/sanrio.webp" },
 ];
 
 const SORT_OPTIONS = [
@@ -33,7 +33,7 @@ function getFilterCondition(params: URLSearchParams) {
   const where: Record<string, unknown> = {};
   const andConditions: Record<string, unknown>[] = [];
 
-  const search = params.get("q");
+  const search = params.get("q")?.trim().slice(0, 70) ?? null;
   if (search) {
     const terms = search.trim().split(/\s+/).filter(Boolean).slice(0, 5);
     if (terms.length > 0) {
@@ -141,6 +141,7 @@ async function getCatalog() {
 async function getProducts(searchParams: URLSearchParams) {
   const where = getFilterCondition(searchParams);
   const orderBy = getOrderBy(searchParams.get("orden"));
+  const showAll = searchParams.get("todos") === "1";
 
   const [products, total] = await Promise.all([
     prisma.product.findMany({
@@ -153,12 +154,15 @@ async function getProducts(searchParams: URLSearchParams) {
         imagenes: { orderBy: { orden: "asc" } },
       },
       orderBy,
-      take: 48,
+      // 6 visibles + 1 para saber si hay más; con ?todos=1 se muestran todos
+      take: showAll ? 48 : 7,
     }),
     prisma.product.count({ where }),
   ]);
 
-  return { products, total };
+  if (showAll) return { products, total, hasMore: false };
+
+  return { products: products.slice(0, 6), total, hasMore: products.length > 6 };
 }
 
 export default async function ProductsPage({
@@ -172,7 +176,7 @@ export default async function ProductsPage({
     if (value) params.set(key, Array.isArray(value) ? value.join(",") : value);
   }
 
-  const [{ categories, brands, franchises, totalProducts }, { products, total }] =
+  const [{ categories, brands, franchises, totalProducts }, { products, total, hasMore }] =
     await Promise.all([getCatalog(), getProducts(params)]);
 
   const session = await auth();
@@ -319,6 +323,21 @@ export default async function ProductsPage({
                   />
                 );
               })}
+            </div>
+          )}
+
+          {hasMore && (
+            <div className="mt-10 text-center">
+              <a
+                href={`/productos?${(() => {
+                  const q = new URLSearchParams(params);
+                  q.set("todos", "1");
+                  return q.toString();
+                })()}`}
+                className="inline-flex h-12 px-8 items-center rounded-xl border border-jw-gray-300 bg-white text-sm font-semibold text-jw-black hover:border-jw-red hover:text-jw-red transition-colors"
+              >
+                Ver más productos
+              </a>
             </div>
           )}
         </div>

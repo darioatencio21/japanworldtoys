@@ -28,6 +28,7 @@ export default async function CategoryPage({
 
   if (!category) notFound();
 
+  // Máximo 6 productos en pantalla; el resto se ve con "Ver más"
   const [products, childProducts, siblings] = await Promise.all([
     prisma.product.findMany({
       where: { categoriaId: category.id, estado: { not: "DESCONTINUADO" } },
@@ -35,7 +36,7 @@ export default async function CategoryPage({
         imagenes: { orderBy: { orden: "asc" } },
       },
       orderBy: [{ destacado: "desc" }, { createdAt: "desc" }],
-      take: 48,
+      take: 6,
     }),
     prisma.product.findMany({
       where: {
@@ -46,7 +47,7 @@ export default async function CategoryPage({
         imagenes: { orderBy: { orden: "asc" } },
       },
       orderBy: [{ destacado: "desc" }, { createdAt: "desc" }],
-      take: 48,
+      take: 6,
     }),
     prisma.category.findMany({
       where: { parentId: category.parentId },
@@ -54,7 +55,20 @@ export default async function CategoryPage({
     }),
   ]);
 
-  const allProducts = [...products, ...childProducts];
+  const allProductsRaw = [...products, ...childProducts];
+  const allProducts = allProductsRaw.slice(0, 6);
+  const hasMore = allProductsRaw.length > 6;
+
+  // Conteo real (incluye subcategorías) para el badge del header
+  const totalCategory = await prisma.product.count({
+    where: {
+      estado: { not: "DESCONTINUADO" },
+      OR: [
+        { categoriaId: category.id },
+        { categoria: { parentId: category.id } },
+      ],
+    },
+  });
 
   const session = await auth();
 
@@ -83,7 +97,7 @@ export default async function CategoryPage({
             {category.parent && (
               <Badge variant="gold">{category.parent.nombre}</Badge>
             )}
-            <Badge className="bg-white/20 text-white">{allProducts.length} productos</Badge>
+            <Badge className="bg-white/20 text-white">{totalCategory} productos</Badge>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)]">
             {category.nombre}
@@ -93,6 +107,17 @@ export default async function CategoryPage({
           )}
         </div>
       </div>
+
+      {hasMore && (
+        <div className="mb-10 text-center">
+          <Link
+            href={`/productos?categoria=${category.slug}&todos=1`}
+            className="inline-flex h-12 px-8 items-center rounded-xl border border-jw-gray-300 bg-white text-sm font-semibold text-jw-black hover:border-jw-red hover:text-jw-red transition-colors"
+          >
+            Ver más productos
+          </Link>
+        </div>
+      )}
 
       {/* Subcategories */}
       {category.children.length > 0 && (
@@ -117,7 +142,7 @@ export default async function CategoryPage({
         </div>
       )}
 
-      {allProducts.length === 0 ? (
+      {totalCategory === 0 ? (
         <div className="text-center py-20">
           <p className="text-4xl mb-4">📦</p>
           <h2 className="text-xl font-semibold text-jw-black mb-2">

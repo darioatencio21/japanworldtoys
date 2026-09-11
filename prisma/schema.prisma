@@ -132,8 +132,10 @@ model Franchise {
   id        String    @id @default(cuid())
   nombre    String
   slug      String    @unique
-  imagen    String?
+  imagen    String?   // imagen de la tarjeta de colección (desktop)
+  imagenMobile String?  // imagen de la tarjeta de colección (celular/tablet)
   color     String?   // color temático de la franquicia (ej. naranja para Naruto)
+  mensaje   String?   // mensaje corto mostrado en la tarjeta de colección
   productos Product[]
   banners   Banner[]
 
@@ -421,6 +423,24 @@ model Page {
   metaDesc  String?
   activo    Boolean @default(true)
   updatedAt DateTime @updatedAt
+}
+
+// Bloques promocionales de la home (tarjetas de colección grandes)
+model PromoBlock {
+  id              String   @id @default(cuid())
+  badge           String?  // etiqueta corta (ej. "COLECCIÓN")
+  titulo          String
+  descripcion     String?
+  backgroundImage String?  // imagen de fondo del bloque (desktop)
+  backgroundImageMobile String?  // imagen de fondo del bloque (celular/tablet)
+  textoCTA        String?  // texto del botón
+  linkCTA         String?
+  orden           Int      @default(0)
+  activo          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([activo, orden])
 }
 
 model Subscriber {

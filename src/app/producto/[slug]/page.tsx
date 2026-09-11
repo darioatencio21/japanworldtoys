@@ -87,7 +87,7 @@ export default async function ProductPage({
       imagenes: { orderBy: { orden: "asc" } },
     },
     orderBy: [{ destacado: "desc" }, { createdAt: "desc" }],
-    take: 8,
+    take: 6,
   });
 
   const breadcrumbs = [

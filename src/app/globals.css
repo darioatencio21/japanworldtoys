@@ -134,6 +134,11 @@ body {
   50% { transform: translateY(5px); }
 }
 
+@keyframes float-sm {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(2px); }
+}
+
 .animate-fade-up {
   animation: fade-up 0.5s ease-out forwards;
 }
@@ -161,6 +166,14 @@ body {
 
 .animate-float {
   animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float-sm {
+  animation: float-sm 5s ease-in-out infinite;
 }
 
 /* ──────────────────────────────────────────────

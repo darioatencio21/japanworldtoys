@@ -1,21 +1,51 @@
+name: japanworldtoys
+
 services:
   db:
     image: postgres:16-alpine
     container_name: jw-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: japanworld
-      POSTGRES_USER: jw_user
-      POSTGRES_PASSWORD: jw_password
+      POSTGRES_DB: ${DB_NAME:-japanworld}
+      POSTGRES_USER: ${DB_USER:-jw_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-jw_password}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U jw_user -d japanworld"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-jw_user} -d ${DB_NAME:-japanworld}"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+        NEXT_PUBLIC_WHATSAPP_NUMBER: ${NEXT_PUBLIC_WHATSAPP_NUMBER:-543813652079}
+    container_name: jw-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - ./public/uploads:/app/public/uploads
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      DATABASE_URL: postgresql://${DB_USER:-jw_user}:${DB_PASSWORD:-jw_password}@db:5432/${DB_NAME:-japanworld}?schema=public
+      AUTH_URL: ${AUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_WHATSAPP_NUMBER: ${NEXT_PUBLIC_WHATSAPP_NUMBER:-543813652079}
+    env_file:
+      - .env.local
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:

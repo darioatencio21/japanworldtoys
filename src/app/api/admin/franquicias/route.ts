@@ -7,6 +7,10 @@ export const dynamic = "force-dynamic";
 
 const schema = z.object({
   nombre: z.string().trim().min(1, "El nombre es obligatorio").max(50, "El nombre no puede superar los 50 caracteres"),
+  color: z.string().trim().max(20, "El color no puede superar los 20 caracteres").optional().default(""),
+  imagen: z.string().trim().max(500, "La imagen no puede superar los 500 caracteres").optional().default(""),
+  imagenMobile: z.string().trim().max(500, "La imagen celular no puede superar los 500 caracteres").optional().default(""),
+  mensaje: z.string().trim().max(200, "El mensaje no puede superar los 200 caracteres").optional().default(""),
 });
 
 function slugify(text: string): string {
@@ -17,6 +21,20 @@ function slugify(text: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "")
     .slice(0, 50);
+}
+
+export async function GET() {
+  const session = await auth();
+  const allow = ["ADMIN", "SUPERADMIN", "EDITOR"];
+  if (!session?.user || !allow.includes(session.user.rol)) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+  }
+
+  const franchises = await prisma.franchise.findMany({
+    include: { _count: { select: { productos: true } } },
+    orderBy: { nombre: "asc" },
+  });
+  return NextResponse.json({ franchises });
 }
 
 export async function POST(request: Request) {
@@ -47,7 +65,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const franchise = await prisma.franchise.create({ data: { nombre, slug } });
+    const franchise = await prisma.franchise.create({
+      data: {
+        nombre,
+        slug,
+        color: parsed.data.color || null,
+        imagen: parsed.data.imagen || null,
+        imagenMobile: parsed.data.imagenMobile || null,
+        mensaje: parsed.data.mensaje || null,
+      },
+    });
     return NextResponse.json({ ok: true, franchise });
   } catch (error) {
     console.error("Admin crear franquicia error:", error);

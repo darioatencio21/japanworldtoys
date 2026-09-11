@@ -1,10 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { prisma } from "@/lib/prisma";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { SITE_NAME } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
+
+function publicFileExists(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    return existsSync(path.join(process.cwd(), "public", url)) ? url : null;
+  } catch {
+    return null;
+  }
+}
 
 export const metadata: Metadata = {
   title: `Franquicias | ${SITE_NAME}`,
@@ -26,6 +38,12 @@ export default async function FranchisesPage() {
 
   const withProducts = franchises.filter((f) => f._count.productos > 0);
   const withoutProducts = franchises.filter((f) => f._count.productos === 0);
+
+  const cards = [...withProducts, ...withoutProducts].map((f) => ({
+    ...f,
+    imagen: publicFileExists(f.imagen),
+    imagenMobile: publicFileExists(f.imagenMobile),
+  }));
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -52,15 +70,43 @@ export default async function FranchisesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {[...withProducts, ...withoutProducts].map((f) => (
+          {cards.map((f) => {
+            const mobile = f.imagenMobile || f.imagen;
+            const desktop = f.imagen || f.imagenMobile;
+            return (
             <Link
               key={f.id}
               href={`/franquicia/${f.slug}`}
-              className="group relative flex flex-col justify-end min-h-[120px] rounded-xl overflow-hidden p-4 text-white transition-transform hover:scale-[1.02]"
+              className="group relative flex flex-col justify-end min-h-[150px] md:min-h-[170px] rounded-xl overflow-hidden p-4 text-white transition-transform hover:scale-[1.02]"
               style={{
                 background: `linear-gradient(135deg, ${f.color || "#E10600"} 0%, #0E0E0F 100%)`,
               }}
             >
+              {mobile && (
+                <Image
+                  src={mobile}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover md:hidden"
+                />
+              )}
+              {desktop && (
+                <Image
+                  src={desktop}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover hidden md:block"
+                />
+              )}
+              {(mobile || desktop) && (
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/15"
+                />
+              )}
+              <div className="relative z-10">
               <span className="text-xs uppercase tracking-[0.15em] text-white/60 font-bold mb-1">
                 Colección
               </span>
@@ -71,11 +117,18 @@ export default async function FranchisesPage() {
                 {f._count.productos}{" "}
                 {f._count.productos === 1 ? "producto" : "productos"}
               </span>
-              <span className="absolute right-3 top-3 text-xs font-semibold px-2 py-0.5 rounded-full bg-white/15 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+              {f.mensaje && (
+                <span className="text-[11px] leading-snug text-white/70 mt-1 line-clamp-2">
+                  {f.mensaje}
+                </span>
+              )}
+              </div>
+              <span className="absolute right-3 top-3 z-10 text-xs font-semibold px-2 py-0.5 rounded-full bg-white/15 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
                 Ver →
               </span>
             </Link>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

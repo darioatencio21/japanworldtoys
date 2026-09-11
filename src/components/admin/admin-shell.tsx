@@ -17,13 +17,17 @@ import {
   Menu,
   X,
   ExternalLink,
+  Layers,
+  LayoutTemplate,
 } from "lucide-react";
 
 const adminNav = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Productos", href: "/admin/productos", icon: Package },
-  { label: "Cupones", href: "/admin/cupones", icon: Tag },
+  { label: "Colecciones", href: "/admin/franquicias", icon: Layers },
+  { label: "Bloques home", href: "/admin/promo-blocks", icon: LayoutTemplate },
   { label: "Banners", href: "/admin/banners", icon: ImageIcon },
+  { label: "Cupones", href: "/admin/cupones", icon: Tag },
   { label: "Páginas", href: "/admin/paginas", icon: FileText },
   { label: "Reportes", href: "/admin/reportes", icon: PieChart },
   { label: "Configuración", href: "/admin/configuracion", icon: Settings },
@@ -87,16 +91,17 @@ export function AdminShell({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="h-dvh flex flex-col overflow-hidden">
-      {/* Background image */}
+    <div className="flex min-h-dvh flex-col">
+      {/* Base opaca: tapa el fondo global para que no se mezcle con las tarjetas */}
+      <div className="fixed inset-0 z-0 bg-jw-off-white" aria-hidden="true" />
+      {/* Textura del panel, muy atenuada para no confundirse con el contenido */}
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: "url(/images/backgrounds/fondo-panel-admin.png)" }}
+        className="fixed inset-0 z-0 bg-cover bg-center bg-[url('/images/backgrounds/fondo-panel-admin-mobile.webp')] md:bg-[url('/images/backgrounds/fondo-panel-admin.webp')] opacity-[0.15]"
         aria-hidden="true"
       />
 
       {/* Top bar */}
-      <header className="relative z-20 bg-white shadow-sm flex-shrink-0">
+      <header className="sticky top-0 z-30 bg-white shadow-sm flex-shrink-0">
         <div className="h-12 px-4 flex items-center justify-between">
           {/* Left: hamburger (mobile) + logo */}
           <div className="flex items-center gap-2">
@@ -109,7 +114,7 @@ export function AdminShell({
             </button>
             <Link href="/admin" className="flex items-center gap-2 font-bold text-sm">
               <img
-                src="/images/logo/logo-japan-world-toys.png"
+                src="/images/logo/logo-japan-world-toys.webp"
                 alt="JapanWorld Toys"
                 className="h-7 w-auto object-contain"
               />
@@ -136,14 +141,14 @@ export function AdminShell({
       </header>
 
       {/* Body: sidebar (desktop) + main */}
-      <div className="relative z-10 flex flex-1 min-h-0">
-        {/* Desktop sidebar */}
-        <aside className="hidden md:flex flex-col w-56 flex-shrink-0 bg-white border-r border-jw-gray-200">
+      <div className="relative z-10 flex flex-1">
+        {/* Desktop sidebar: queda fija mientras scrollea la página */}
+        <aside className="hidden md:flex flex-col w-56 flex-shrink-0 bg-white border-r border-jw-gray-200 md:sticky md:top-12 md:h-[calc(100dvh_-_3rem)] md:self-start">
           <SidebarNav />
         </aside>
 
-        {/* Main content (scrolls internally) */}
-        <main className="flex-1 min-w-0 overflow-y-auto px-4 md:px-6 py-6">
+        {/* Main content: la página scrollea normalmente en todos los tamaños */}
+        <main className="flex-1 min-w-0 px-4 md:px-6 py-6">
           {children}
         </main>
       </div>

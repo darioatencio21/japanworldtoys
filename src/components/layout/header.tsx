@@ -7,19 +7,20 @@ import { usePathname } from "next/navigation";
 import { ProductSearch } from "@/components/ui/product-search";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
-import { NAV_ITEMS, SITE_NAME } from "@/lib/constants";
+import { NAV_ITEMS, SITE_NAME, WHATSAPP_LINK } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { MegaMenu } from "./mega-menu";
 import { TopBar } from "./top-bar";
 import {
   ShoppingBag,
-  Heart,
   Menu,
   X,
   ChevronDown,
   Tag,
   Sparkles,
+  Home,
   Store,
+  MessageCircle,
 } from "lucide-react";
 
 export function Header() {
@@ -48,44 +49,53 @@ export function Header() {
       {/* Main Header */}
       <header
         className={cn(
-          "sticky top-0 z-50 bg-white border-b border-jw-gray-200 transition-shadow duration-300",
+          "relative sticky top-0 z-50 bg-white border-b border-jw-gray-200 transition-shadow duration-300",
           isScrolled && "shadow-md"
         )}
       >
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-full px-4">
           {/* Upper Header: Logo + Search + Actions */}
           <div className="flex items-center justify-between h-16 gap-4">
-            {/* Mobile Menu Toggle */}
-            <button
-              className="lg:hidden p-2 -ml-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Abrir menú"
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            <div className="flex items-center gap-2 min-w-0">
+              {/* Mobile Menu Toggle */}
+              <button
+                className="lg:hidden p-2 -ml-2 flex-shrink-0 z-50"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Abrir menú"
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
 
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0 flex items-center gap-2">
-              <Image
-                src="/images/logo/logo-japan-world-toys.png"
-                alt={SITE_NAME}
-                width={160}
-                height={40}
-                className="h-10 w-auto"
-                priority
-              />
-            </Link>
+              {/* Logo */}
+              <Link href="/" className="flex-shrink-0 flex items-center gap-2">
+                <Image
+                  src="/images/logo/logo-japan-world-toys.webp"
+                  alt={SITE_NAME}
+                  width={48}
+                  height={48}
+                  className="h-12 w-12"
+                  priority
+                />
+              </Link>
+            </div>
 
             {/* Search - Desktop */}
-            <div className="hidden md:flex flex-1 max-w-xl mx-6">
+            <div className="hidden md:flex flex-1 max-w-xl mx-6 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:w-[480px] lg:mx-0">
               <ProductSearch className="w-full" />
             </div>
 
             {/* Actions */}
             <div className="flex items-center gap-1 sm:gap-2">
-              <Button variant="ghost" size="icon" aria-label="Favoritos">
-                <Heart className="h-5 w-5" />
-              </Button>
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Contactanos por WhatsApp"
+                title="¡Escribinos por WhatsApp!"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#25D366] text-white shadow-md transition-transform hover:scale-110 sm:h-10 sm:w-10"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </a>
               <Button
                 variant="ghost"
                 size="icon"
@@ -127,6 +137,14 @@ export function Header() {
             </div>
 
             <div className="max-h-[70vh] overflow-y-auto px-4 py-4">
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 h-12 px-4 my-1 rounded-xl text-sm font-semibold text-jw-gray-700 hover:bg-jw-off-white hover:text-jw-black transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                Inicio
+              </Link>
               {NAV_ITEMS.map((item) => {
                 const hasChildren = item.children && item.children.length > 0;
                 const isOpen = openSections[item.label] || false;

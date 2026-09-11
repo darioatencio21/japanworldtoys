@@ -83,16 +83,16 @@ async function main() {
 
   // ─── FRANQUICIAS ──────────────────────────────
   const franchises = [
-    { nombre: "One Piece", slug: "one-piece", color: "#FF4500" },
-    { nombre: "Naruto", slug: "naruto", color: "#FF6B00" },
-    { nombre: "Dragon Ball", slug: "dragon-ball", color: "#FFD700" },
-    { nombre: "Demon Slayer", slug: "demon-slayer", color: "#1A1A2E" },
-    { nombre: "Jujutsu Kaisen", slug: "jujutsu-kaisen", color: "#2D0A3E" },
-    { nombre: "Attack on Titan", slug: "attack-on-titan", color: "#8B0000" },
-    { nombre: "My Hero Academia", slug: "my-hero-academia", color: "#1B5E20" },
-    { nombre: "Sanrio", slug: "sanrio-characters", color: "#FFB6C1" },
-    { nombre: "Warner Bros", slug: "warner-bros", color: "#1C1C1C" },
-    { nombre: "Xena", slug: "xena", color: "#8B4513" },
+    { nombre: "One Piece", slug: "one-piece", color: "#FF4500", mensaje: "Mugis, Yonkous y aventuras legendarias en alta mar" },
+    { nombre: "Naruto", slug: "naruto", color: "#FF6B00", mensaje: "El ninja más famoso de Konoha y su gran camino" },
+    { nombre: "Dragon Ball", slug: "dragon-ball", color: "#FFD700", mensaje: "La historia que todo coleccionista quiere tener" },
+    { nombre: "Demon Slayer", slug: "demon-slayer", color: "#1A1A2E", mensaje: "Figuras exclusivas de Kimetsu no Yaiba — Tanjiro, Nezuko, Zenitsu y más" },
+    { nombre: "Jujutsu Kaisen", slug: "jujutsu-kaisen", color: "#2D0A3E", mensaje: "Maldiciones, hechiceros y el mundo de Gojo" },
+    { nombre: "Attack on Titan", slug: "attack-on-titan", color: "#8B0000", mensaje: "La batalla por la humanidad contra los titanes" },
+    { nombre: "My Hero Academia", slug: "my-hero-academia", color: "#1B5E20", mensaje: "Héroes con quirk para formar tu propia academia" },
+    { nombre: "Sanrio", slug: "sanrio-characters", color: "#FFB6C1", mensaje: "Hello Kitty, Kuromi y todos los personajes kawaii" },
+    { nombre: "Warner Bros", slug: "warner-bros", color: "#1C1C1C", mensaje: "Batman, Superman y los íconos de DC en Figuarts" },
+    { nombre: "Xena", slug: "xena", color: "#8B4513", mensaje: "La princesa guerrera en figuras de colección" },
   ];
 
   const createdFranchises: Record<string, string> = {};
@@ -150,8 +150,8 @@ async function main() {
       metaDescription: "Figura Funko Pop! Mystery Warner Bros. Horror. Comprala en JapanWorld Toys, la gran comiquería de Tucumán.",
       imagenes: {
         create: [
-          { url: "/images/products/mystery-warner-horror-1.jpg", alt: "Pop Mystery Warner Bros Horror - Vista 1", orden: 0, esPrincipal: true },
-          { url: "/images/products/mystery-warner-horror-2.jpg", alt: "Pop Mystery Warner Bros Horror - Vista 2", orden: 1 },
+          { url: "/images/products/mystery-warner-horror-1.webp", alt: "Pop Mystery Warner Bros Horror - Vista 1", orden: 0, esPrincipal: true },
+          { url: "/images/products/mystery-warner-horror-2.webp", alt: "Pop Mystery Warner Bros Horror - Vista 2", orden: 1 },
         ],
       },
       franquicias: {
@@ -177,8 +177,8 @@ async function main() {
       metaDescription: "Figura Funko Xena Warrior Princess Exclusive Mini Button. Edición exclusiva disponible en JapanWorld Toys.",
       imagenes: {
         create: [
-          { url: "/images/products/xena-mini-button-1.jpg", alt: "Xena Warrior Princess Mini Button - Vista 1", orden: 0, esPrincipal: true },
-          { url: "/images/products/xena-mini-button-2.png", alt: "Xena Warrior Princess Mini Button - Vista 2", orden: 1 },
+          { url: "/images/products/xena-mini-button-1.webp", alt: "Xena Warrior Princess Mini Button - Vista 1", orden: 0, esPrincipal: true },
+          { url: "/images/products/xena-mini-button-2.webp", alt: "Xena Warrior Princess Mini Button - Vista 2", orden: 1 },
         ],
       },
       franquicias: {
@@ -383,8 +383,8 @@ async function main() {
       {
         titulo: "Nuevos Ingresos Funko",
         subtitulo: "Descubrí las últimas figuras que llegaron a JapanWorld",
-        imagenDesktop: "/images/heroes/hero-funko.webp",
-        imagenMobile: "/images/heroes/hero-funko-mobile.webp",
+        imagenDesktop: "/images/heroes/hero-funko.svg",
+        imagenMobile: "/images/heroes/hero-funko.svg",
         textoCTA: "Ver colección",
         linkCTA: "/productos?categoria=funkos",
         tipo: "hero",
@@ -394,8 +394,8 @@ async function main() {
       {
         titulo: "Demon Slayer Collection",
         subtitulo: "Figuras exclusivas de Kimetsu no Yaiba",
-        imagenDesktop: "/images/heroes/hero-demon-slayer.webp",
-        imagenMobile: "/images/heroes/hero-demon-slayer-mobile.webp",
+        imagenDesktop: "/images/heroes/hero-demon-slayer.svg",
+        imagenMobile: "/images/heroes/hero-demon-slayer.svg",
         textoCTA: "Explorar",
         linkCTA: "/franquicia/demon-slayer",
         tipo: "hero",
@@ -405,8 +405,8 @@ async function main() {
       {
         titulo: "Sanrio para Coleccionistas",
         subtitulo: "Hello Kitty, Kuromi y más — ediciones limitadas",
-        imagenDesktop: "/images/heroes/hero-sanrio.webp",
-        imagenMobile: "/images/heroes/hero-sanrio-mobile.webp",
+        imagenDesktop: "/images/heroes/hero-sanrio.svg",
+        imagenMobile: "/images/heroes/hero-sanrio.svg",
         textoCTA: "Ver Sanrio",
         linkCTA: "/productos?categoria=sanrio",
         tipo: "hero",
@@ -450,6 +450,34 @@ async function main() {
   });
 
   console.log("✅ Páginas estáticas creadas");
+
+  // ─── BLOQUES PROMOCIONALES DE LA HOME ──────
+  await prisma.promoBlock.createMany({
+    data: [
+      {
+        badge: "COLECCIÓN",
+        titulo: "Demon Slayer",
+        descripcion: "Figuras exclusivas de Kimetsu no Yaiba — Tanjiro, Nezuko, Zenitsu y más.",
+        backgroundImage: "/img/banners/bg_card_demonslayer.webp",
+        textoCTA: "Explorar colección",
+        linkCTA: "/franquicia/demon-slayer",
+        orden: 0,
+        activo: true,
+      },
+      {
+        badge: "SANRIO",
+        titulo: "Hello Kitty & Friends",
+        descripcion: "Peluches, figuras y accesorios de Sanrio — ediciones limitadas disponibles.",
+        backgroundImage: "/img/banners/bg_card_sanrio.webp",
+        textoCTA: "Ver Sanrio",
+        linkCTA: "/productos/sanrio",
+        orden: 1,
+        activo: true,
+      },
+    ],
+  });
+
+  console.log("✅ Bloques promocionales creados");
   console.log("🎉 Seed completado!");
 }
 

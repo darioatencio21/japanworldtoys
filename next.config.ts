@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     // Los SVGs son generados localmente (placeholders de demo), no subidos por usuarios
     dangerouslyAllowSVG: true,

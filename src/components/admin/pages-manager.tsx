@@ -158,6 +158,53 @@ export function PagesManager({
     }
   };
 
+  const renderActions = (page: PageData, className?: string) => (
+    <div className={cn("flex flex-shrink-0 items-center gap-1.5", className)}>
+      <Link
+        href={`/pagina/${page.slug}`}
+        target="_blank"
+        className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
+        aria-label="Ver página"
+        title="Ver página"
+      >
+        <ExternalLink className="h-4 w-4" />
+      </Link>
+      <button
+        onClick={() => handleToggle(page)}
+        disabled={isToggling === page.id}
+        className={cn(
+          "h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center transition-colors disabled:opacity-50",
+          page.activo
+            ? "text-jw-success hover:bg-jw-success/10"
+            : "text-jw-gray-400 hover:bg-jw-off-white"
+        )}
+        aria-label={page.activo ? "Ocultar" : "Publicar"}
+        title={page.activo ? "Ocultar" : "Publicar"}
+      >
+        <Power className="h-4 w-4" />
+      </button>
+      <button
+        onClick={() => openEdit(page)}
+        className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
+        aria-label="Editar"
+        title="Editar"
+      >
+        <Pencil className="h-4 w-4" />
+      </button>
+      {canDelete && (
+        <button
+          onClick={() => handleDelete(page)}
+          disabled={isDeleting === page.id}
+          className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-error hover:bg-jw-error/10 transition-colors disabled:opacity-50"
+          aria-label="Eliminar"
+          title="Eliminar"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+
   const fieldClass =
     "flex h-11 w-full rounded-lg border border-jw-gray-300 bg-white px-3 py-2 text-sm text-jw-black transition-colors " +
     "placeholder:text-jw-gray-400 " +
@@ -169,7 +216,7 @@ export function PagesManager({
     <div>
       <Toaster position="top-right" />
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold font-[family-name:var(--font-display)] text-jw-black">
             Páginas
@@ -180,7 +227,7 @@ export function PagesManager({
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 rounded-lg bg-jw-red text-white text-sm font-semibold px-4 h-11 hover:bg-jw-red-dark transition-colors"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-jw-red text-white text-sm font-semibold px-4 h-11 hover:bg-jw-red-dark transition-colors sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           Nueva página
@@ -188,7 +235,7 @@ export function PagesManager({
       </div>
 
       {pages.length === 0 ? (
-        <div className="bg-white border border-dashed border-jw-gray-300 rounded-2xl p-16 text-center">
+        <div className="bg-white border border-dashed border-jw-gray-300 rounded-2xl px-6 py-12 sm:p-16 text-center">
           <div className="mx-auto h-12 w-12 rounded-xl bg-jw-red/10 flex items-center justify-center mb-3">
             <FileText className="h-6 w-6 text-jw-red" />
           </div>
@@ -198,8 +245,58 @@ export function PagesManager({
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-jw-gray-200 overflow-x-auto">
-          <table className="w-full text-sm">
+        <>
+          {/* Mobile: tarjetas */}
+          <div className="md:hidden space-y-3">
+            {pages.map((page) => (
+              <div
+                key={page.id}
+                className="bg-white rounded-2xl border border-jw-gray-200 p-4"
+              >
+                <div className="flex gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-jw-red/10 flex items-center justify-center flex-shrink-0">
+                    <FileText className="h-4 w-4 text-jw-red" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="min-w-0 flex-1 font-semibold text-jw-black text-sm leading-snug line-clamp-2">
+                        {page.titulo}
+                      </p>
+                      <Badge
+                        variant={page.activo ? "success" : "default"}
+                        className="flex-shrink-0 whitespace-nowrap"
+                      >
+                        {page.activo ? "Publicada" : "Oculta"}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-jw-gray-500 mt-0.5 line-clamp-2">
+                      {page.metaTitle || page.contenido.replace(/<[^>]*>/g, "").slice(0, 60)}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2">
+                      <code className="text-xs bg-jw-off-white border border-jw-gray-200 rounded px-1.5 py-0.5">
+                        /pagina/{page.slug}
+                      </code>
+                      <span className="text-xs text-jw-gray-400">
+                        {new Date(page.updatedAt).toLocaleDateString("es-AR", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-3 mt-3 pt-3 border-t border-jw-gray-100">
+                  {renderActions(page)}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: tabla */}
+          <div className="hidden md:block bg-white rounded-2xl border border-jw-gray-200 overflow-x-auto">
+            <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-jw-gray-200 text-left text-xs text-jw-gray-500 uppercase tracking-wide">
                 <th className="px-4 py-3 font-semibold">Página</th>
@@ -245,56 +342,14 @@ export function PagesManager({
                     </Badge>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <Link
-                        href={`/pagina/${page.slug}`}
-                        target="_blank"
-                        className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
-                        aria-label="Ver página"
-                        title="Ver página"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </Link>
-                      <button
-                        onClick={() => handleToggle(page)}
-                        disabled={isToggling === page.id}
-                        className={cn(
-                          "h-8 w-8 rounded-lg flex items-center justify-center transition-colors",
-                          page.activo
-                            ? "text-jw-success hover:bg-jw-success/10"
-                            : "text-jw-gray-400 hover:bg-jw-off-white"
-                        )}
-                        aria-label={page.activo ? "Ocultar" : "Publicar"}
-                        title={page.activo ? "Ocultar" : "Publicar"}
-                      >
-                        <Power className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => openEdit(page)}
-                        className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
-                        aria-label="Editar"
-                        title="Editar"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      {canDelete && (
-                        <button
-                          onClick={() => handleDelete(page)}
-                          disabled={isDeleting === page.id}
-                          className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-error hover:bg-jw-error/10 transition-colors"
-                          aria-label="Eliminar"
-                          title="Eliminar"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      )}
-                    </div>
+                    {renderActions(page, "justify-end")}
                   </td>
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </>
       )}
 
       {/* Modal */}
@@ -305,7 +360,7 @@ export function PagesManager({
             onClick={() => setIsModalOpen(false)}
           />
           <div className="relative min-h-full flex items-center justify-center p-4">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90dvh] overflow-y-auto">
               <div className="flex items-center justify-between px-6 py-4 border-b border-jw-gray-200 sticky top-0 bg-white z-10">
                 <h2 className="text-lg font-bold font-[family-name:var(--font-display)] text-jw-black">
                   {editingId ? "Editar página" : "Nueva página"}

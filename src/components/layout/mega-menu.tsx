@@ -73,7 +73,7 @@ export function MegaMenu({
     <div
       className={cn(
         usesCards
-          ? "grid grid-cols-1 sm:grid-cols-2 gap-[18px] sm:gap-5"
+          ? "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
           : "grid grid-cols-2 lg:grid-cols-3 gap-3"
       )}
     >
@@ -151,12 +151,12 @@ export function MegaMenu({
           className={cn(
             "mega-menu-panel absolute left-0 top-full z-[60] overflow-hidden shadow-[0_24px_48px_-12px_rgba(0,0,0,0.22)]",
             usesCards
-              ? "isolate w-[min(92vw,600px)] rounded-[20px] bg-[#fdf8f5] bg-gradient-to-b from-white via-[#fdf9f5] to-[#fbedeb] ring-1 ring-jw-red/10"
+              ? "isolate w-[min(92vw,480px)] rounded-[20px] bg-[#fdf8f5] bg-gradient-to-b from-white via-[#fdf9f5] to-[#fbedeb] ring-1 ring-jw-red/10"
               : "min-w-[600px] rounded-xl bg-white border border-jw-gray-200 shadow-xl"
           )}
         >
           {usesCards ? (
-            <div className="relative px-5 sm:px-8 pt-6 pb-5 sm:pt-8 sm:pb-6">
+            <div className="relative px-4 sm:px-6 pt-4 pb-4 sm:pt-6 sm:pb-5">
               {/* Patrón de fondo sutil (olas/seigaiha) */}
               <div
                 aria-hidden
@@ -164,23 +164,23 @@ export function MegaMenu({
                 style={{ backgroundImage: SEIGAIHA_BG, backgroundSize: "40px 40px", backgroundRepeat: "repeat" }}
               />
               {/* Sakuras decorativas en las esquinas */}
-              <Sakura className="pointer-events-none absolute -left-2 -top-3 size-14 sm:size-16 text-jw-red/15 -rotate-12" />
-              <Sakura className="pointer-events-none absolute -right-3 -bottom-4 size-16 sm:size-20 text-jw-red/15 rotate-[168deg]" />
+              <Sakura className="pointer-events-none absolute -left-2 -top-3 size-10 sm:size-12 text-jw-red/15 -rotate-12" />
+              <Sakura className="pointer-events-none absolute -right-3 -bottom-4 size-12 sm:size-16 text-jw-red/15 rotate-[168deg]" />
 
               {/* Título */}
-              <h3 className="text-center font-[family-name:var(--font-display)] text-xl sm:text-2xl font-bold text-jw-black">
+              <h3 className="text-center font-[family-name:var(--font-display)] text-lg sm:text-xl font-bold text-jw-black">
                 {title}
               </h3>
-              <div className="mt-2 flex items-center justify-center gap-2" aria-hidden>
+              <div className="mt-1.5 flex items-center justify-center gap-2" aria-hidden>
                 <span className="h-px w-8 bg-jw-red/30" />
                 <span className="h-1.5 w-1.5 rotate-45 bg-jw-red" />
                 <span className="h-px w-8 bg-jw-red/30" />
               </div>
 
-              <div className="pt-5 sm:pt-6">{grid}</div>
+              <div className="pt-4 sm:pt-5">{grid}</div>
 
               {/* Footer: separador + link a todas las categorías */}
-              <footer className="mt-5 sm:mt-6 border-t border-jw-black/10 pt-4 flex items-center justify-between gap-3">
+              <footer className="mt-4 sm:mt-5 border-t border-jw-black/10 pt-3 flex items-center justify-between gap-3">
                 <span className="text-xs font-medium uppercase tracking-wider text-jw-gray-500">
                   Categorías
                 </span>

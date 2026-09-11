@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   ShoppingCart,
-  Heart,
   Star,
   Truck,
   Store,
@@ -88,7 +87,6 @@ export function ProductInfo({
 }) {
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
   const price = precioEfectivo ?? product.precio;
@@ -244,27 +242,12 @@ export function ProductInfo({
           )}
         </Button>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => setIsWishlisted(!isWishlisted)}
-          >
-            <Heart
-              className={cn(
-                "h-5 w-5",
-                isWishlisted ? "fill-jw-red text-jw-red" : "text-jw-gray-500"
-              )}
-            />
-            Favoritos
-          </Button>
-          <Button variant="outline" size="lg" asChild>
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="h-5 w-5 text-jw-success" />
-              Consultar
-            </a>
-          </Button>
-        </div>
+        <Button variant="outline" size="lg" asChild className="w-full">
+          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+            <MessageCircle className="h-5 w-5 text-jw-success" />
+            Consultar
+          </a>
+        </Button>
       </div>
 
       {/* Trust badges */}

@@ -31,7 +31,7 @@ export async function getFeatured(): Promise<FeaturedProduct[]> {
       imagenes: { orderBy: { orden: "asc" } },
     },
     orderBy: [{ destacado: "desc" }, { createdAt: "desc" }],
-    take: 10,
+    take: 6,
   });
 
   if (products.length === 0) return [];

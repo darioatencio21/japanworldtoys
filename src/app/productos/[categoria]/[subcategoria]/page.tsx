@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/product/product-card";
 import { auth } from "@/lib/auth";
@@ -26,13 +27,21 @@ export default async function SubcategoryPage({
 
   const session = await auth();
 
-  const products = await prisma.product.findMany({
+  // Máximo 6 productos en pantalla; el resto se ve con "Ver más"
+  const allProductsRaw = await prisma.product.findMany({
     where: { categoriaId: category.id, estado: { not: "DESCONTINUADO" } },
     include: {
       imagenes: { orderBy: { orden: "asc" } },
     },
     orderBy: [{ destacado: "desc" }, { createdAt: "desc" }],
-    take: 48,
+    take: 7, // 6 visibles + 1 para saber si hay más
+  });
+  const products = allProductsRaw.slice(0, 6);
+  const hasMore = allProductsRaw.length > 6;
+
+  // Conteo real para el badge del header
+  const totalSubcategory = await prisma.product.count({
+    where: { categoriaId: category.id, estado: { not: "DESCONTINUADO" } },
   });
 
   return (
@@ -53,7 +62,7 @@ export default async function SubcategoryPage({
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-3">
             <Badge variant="gold">{category.parent.nombre}</Badge>
-            <Badge className="bg-white/20 text-white">{products.length} productos</Badge>
+            <Badge className="bg-white/20 text-white">{totalSubcategory} productos</Badge>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)]">
             {category.nombre}
@@ -102,6 +111,17 @@ export default async function SubcategoryPage({
             />
           );
         })}
+        </div>
+      )}
+
+      {hasMore && (
+        <div className="mt-10 text-center">
+          <Link
+            href={`/productos?categoria=${category.parent.slug},${category.slug}&todos=1`}
+            className="inline-flex h-12 px-8 items-center rounded-xl border border-jw-gray-300 bg-white text-sm font-semibold text-jw-black hover:border-jw-red hover:text-jw-red transition-colors"
+          >
+            Ver más productos
+          </Link>
         </div>
       )}
     </div>

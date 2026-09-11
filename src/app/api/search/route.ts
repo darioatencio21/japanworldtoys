@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  const q = request.nextUrl.searchParams.get("q")?.trim() ?? "";
+  const q = request.nextUrl.searchParams.get("q")?.trim().slice(0, 70) ?? "";
 
   if (q.length < 2) {
     return NextResponse.json({ results: [] });

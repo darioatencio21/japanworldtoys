@@ -135,6 +135,7 @@ export function ProductSearch({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={className}
+        maxLength={70}
         aria-label="Buscar productos"
         role="combobox"
         aria-expanded={open}

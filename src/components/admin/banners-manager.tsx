@@ -14,6 +14,7 @@ import {
   ImageIcon,
   Calendar,
 } from "lucide-react";
+import { ImageUploadField } from "./image-upload-field";
 
 type BannerFranchise = { id: string; nombre: string };
 type BannerData = {
@@ -207,6 +208,44 @@ export function BannersManager({
     }
   };
 
+  const renderActions = (banner: BannerData, className?: string) => (
+    <div className={cn("flex flex-shrink-0 items-center gap-1.5", className)}>
+      <button
+        onClick={() => handleToggle(banner)}
+        disabled={isToggling === banner.id}
+        className={cn(
+          "h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center transition-colors disabled:opacity-50",
+          banner.activo
+            ? "text-jw-success hover:bg-jw-success/10"
+            : "text-jw-gray-400 hover:bg-jw-off-white"
+        )}
+        aria-label={banner.activo ? "Desactivar" : "Activar"}
+        title={banner.activo ? "Desactivar" : "Activar"}
+      >
+        <Power className="h-4 w-4" />
+      </button>
+      <button
+        onClick={() => openEdit(banner)}
+        className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
+        aria-label="Editar"
+        title="Editar"
+      >
+        <Pencil className="h-4 w-4" />
+      </button>
+      {canDelete && (
+        <button
+          onClick={() => handleDelete(banner)}
+          disabled={isDeleting === banner.id}
+          className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-error hover:bg-jw-error/10 transition-colors disabled:opacity-50"
+          aria-label="Eliminar"
+          title="Eliminar"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+
   const fieldClass =
     "flex h-11 w-full rounded-lg border border-jw-gray-300 bg-white px-3 py-2 text-sm text-jw-black transition-colors " +
     "placeholder:text-jw-gray-400 " +
@@ -218,7 +257,7 @@ export function BannersManager({
     <div>
       <Toaster position="top-right" />
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold font-[family-name:var(--font-display)] text-jw-black">
             Banners
@@ -229,7 +268,7 @@ export function BannersManager({
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 rounded-lg bg-jw-red text-white text-sm font-semibold px-4 h-11 hover:bg-jw-red-dark transition-colors"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-jw-red text-white text-sm font-semibold px-4 h-11 hover:bg-jw-red-dark transition-colors sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           Nuevo banner
@@ -237,7 +276,7 @@ export function BannersManager({
       </div>
 
       {banners.length === 0 ? (
-        <div className="bg-white border border-dashed border-jw-gray-300 rounded-2xl p-16 text-center">
+        <div className="bg-white border border-dashed border-jw-gray-300 rounded-2xl px-6 py-12 sm:p-16 text-center">
           <div className="mx-auto h-12 w-12 rounded-xl bg-jw-red/10 flex items-center justify-center mb-3">
             <ImageIcon className="h-6 w-6 text-jw-red" />
           </div>
@@ -249,8 +288,84 @@ export function BannersManager({
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-jw-gray-200 overflow-x-auto">
-          <table className="w-full text-sm">
+        <>
+          {/* Mobile: tarjetas */}
+          <div className="md:hidden space-y-3">
+            {banners.map((banner) => {
+              const now = new Date();
+              const desde = banner.activoDesde ? new Date(banner.activoDesde) : null;
+              const hasta = banner.activoHasta ? new Date(banner.activoHasta) : null;
+              const vigente = banner.activo && (!desde || desde <= now) && (!hasta || hasta >= now);
+              return (
+                <div
+                  key={banner.id}
+                  className="bg-white rounded-2xl border border-jw-gray-200 p-4"
+                >
+                  <div className="flex gap-3">
+                    <div className="relative h-14 w-20 rounded-lg bg-jw-gray-100 overflow-hidden flex-shrink-0">
+                      {banner.imagenDesktop && (
+                        <Image
+                          src={banner.imagenDesktop}
+                          alt={banner.titulo}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-jw-black text-sm leading-snug line-clamp-2">
+                            {banner.titulo}
+                          </p>
+                          {banner.subtitulo && (
+                            <p className="text-xs text-jw-gray-500 mt-0.5 line-clamp-2">
+                              {banner.subtitulo}
+                            </p>
+                          )}
+                        </div>
+                        <Badge
+                          variant={vigente ? "success" : banner.activo ? "warning" : "default"}
+                          className="flex-shrink-0 whitespace-nowrap"
+                        >
+                          {!banner.activo ? "Inactivo" : vigente ? "Vigente" : "Programado"}
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 text-xs text-jw-gray-500">
+                        <Badge
+                          variant={TIPO_VARIANT[banner.tipo] || "default"}
+                          className="whitespace-nowrap"
+                        >
+                          {TIPO_LABEL[banner.tipo] || banner.tipo}
+                        </Badge>
+                        <span>Orden {banner.orden}</span>
+                        <span className="truncate max-w-full">
+                          {banner.franchise?.nombre || "Todas"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-jw-gray-100">
+                    <span className="text-xs text-jw-gray-500 flex items-center gap-1 min-w-0">
+                      <Calendar className="h-3.5 w-3.5 text-jw-gray-400 flex-shrink-0" />
+                      <span className="truncate">
+                        {desde || hasta
+                          ? `${desde ? desde.toLocaleDateString("es-AR") : "siempre"} → ${hasta ? hasta.toLocaleDateString("es-AR") : "siempre"}`
+                          : "Permanente"}
+                      </span>
+                    </span>
+                    {renderActions(banner)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop: tabla */}
+          <div className="hidden md:block bg-white rounded-2xl border border-jw-gray-200 overflow-x-auto">
+            <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-jw-gray-200 text-left text-xs text-jw-gray-500 uppercase tracking-wide">
                 <th className="px-4 py-3 font-semibold">Banner</th>
@@ -321,48 +436,15 @@ export function BannersManager({
                       </Badge>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => handleToggle(banner)}
-                          disabled={isToggling === banner.id}
-                          className={cn(
-                            "h-8 w-8 rounded-lg flex items-center justify-center transition-colors",
-                            banner.activo
-                              ? "text-jw-success hover:bg-jw-success/10"
-                              : "text-jw-gray-400 hover:bg-jw-off-white"
-                          )}
-                          aria-label={banner.activo ? "Desactivar" : "Activar"}
-                          title={banner.activo ? "Desactivar" : "Activar"}
-                        >
-                          <Power className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => openEdit(banner)}
-                          className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
-                          aria-label="Editar"
-                          title="Editar"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        {canDelete && (
-                          <button
-                            onClick={() => handleDelete(banner)}
-                            disabled={isDeleting === banner.id}
-                            className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-error hover:bg-jw-error/10 transition-colors"
-                            aria-label="Eliminar"
-                            title="Eliminar"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        )}
-                      </div>
+                      {renderActions(banner, "justify-end")}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </>
       )}
 
       {/* Modal */}
@@ -373,7 +455,7 @@ export function BannersManager({
             onClick={() => setIsModalOpen(false)}
           />
           <div className="relative min-h-full flex items-center justify-center p-4">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90dvh] overflow-y-auto">
               <div className="flex items-center justify-between px-6 py-4 border-b border-jw-gray-200 sticky top-0 bg-white z-10">
                 <h2 className="text-lg font-bold font-[family-name:var(--font-display)] text-jw-black">
                   {editingId ? "Editar banner" : "Nuevo banner"}
@@ -424,21 +506,22 @@ export function BannersManager({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={inputLabel}>Imagen desktop *</label>
-                    <input
-                      className={fieldClass}
+                    <ImageUploadField
+                      label="Imagen de fondo (desktop)"
+                      required
                       value={form.imagenDesktop}
-                      onChange={(e) => setForm({ ...form, imagenDesktop: e.target.value })}
-                      placeholder="/images/banners/banner.jpg"
+                      onChange={(url) => setForm({ ...form, imagenDesktop: url })}
+                      placeholder="/uploads/banner-demo-slayer.png"
+                      hint="Cubre el banner en pantallas grandes. Recomendado: panorámica (ej. 1600×640)."
                     />
                   </div>
                   <div>
-                    <label className={inputLabel}>Imagen mobile</label>
-                    <input
-                      className={fieldClass}
+                    <ImageUploadField
+                      label="Imagen de fondo (celular)"
                       value={form.imagenMobile}
-                      onChange={(e) => setForm({ ...form, imagenMobile: e.target.value })}
-                      placeholder="/images/banners/banner-mobile.jpg"
+                      onChange={(url) => setForm({ ...form, imagenMobile: url })}
+                      placeholder="/uploads/banner-demo-slayer-mobile.png"
+                      hint="Imagen alternativa para celular/tablet. Recomendado: más vertical o cuadrada (ej. 750×800)."
                     />
                   </div>
                 </div>

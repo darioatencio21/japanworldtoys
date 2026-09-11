@@ -12,16 +12,20 @@ export default async function OfertasPage() {
   const session = await auth();
   const rol = session?.user?.rol;
 
-  const products = await prisma.product.findMany({
-    where: { precioComparativo: { not: null } },
-    include: {
-      marca: true,
-      categoria: { include: { parent: true } },
-      imagenes: { orderBy: { orden: "asc" } },
-    },
-    orderBy: [{ destacado: "desc" }, { createdAt: "desc" }],
-    take: 48,
-  });
+  // Máximo 6 ofertas en pantalla; el resto se ve con "Ver más"
+  const [products, totalOfertas] = await Promise.all([
+    prisma.product.findMany({
+      where: { precioComparativo: { not: null } },
+      include: {
+        marca: true,
+        categoria: { include: { parent: true } },
+        imagenes: { orderBy: { orden: "asc" } },
+      },
+      orderBy: [{ destacado: "desc" }, { createdAt: "desc" }],
+      take: 7, // 6 visibles + 1 para saber si hay más
+    }),
+    prisma.product.count({ where: { precioComparativo: { not: null } } }),
+  ]);
 
   const sortedByDiscount = [...products].sort((a, b) => {
     const da = a.precioComparativo
@@ -32,6 +36,9 @@ export default async function OfertasPage() {
       : 0;
     return db - da;
   });
+
+  const visibleProducts = sortedByDiscount.slice(0, 6);
+  const hasMore = sortedByDiscount.length > 6;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -66,7 +73,7 @@ export default async function OfertasPage() {
               Ver ofertas
             </a>
             <span className="inline-flex items-center h-12 px-6 rounded-xl text-sm font-semibold bg-white/10 backdrop-blur border border-white/20">
-              {products.length} productos en oferta
+              {totalOfertas} productos en oferta
             </span>
           </div>
         </div>
@@ -99,7 +106,7 @@ export default async function OfertasPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {sortedByDiscount.map((p) => {
+            {visibleProducts.map((p) => {
               const effective = priceForUser(p, rol);
               return (
                 <ProductCard
@@ -127,6 +134,17 @@ export default async function OfertasPage() {
                 />
               );
             })}
+          </div>
+        )}
+
+        {hasMore && (
+          <div className="mt-10 text-center">
+            <a
+              href="/productos?promo=true&todos=1"
+              className="inline-flex h-12 px-8 items-center rounded-xl border border-jw-gray-300 bg-white text-sm font-semibold text-jw-black hover:border-jw-red hover:text-jw-red transition-colors"
+            >
+              Ver más ofertas
+            </a>
           </div>
         )}
       </section>

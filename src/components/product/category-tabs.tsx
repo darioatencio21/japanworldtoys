@@ -35,7 +35,7 @@ export function CategoryTabs({ tabs }: { tabs: CategoryTab[] }) {
   };
 
   return (
-    <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+    <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
       {tabs.map((tab) => {
         const isActive = activeValues.includes(tab.slug);
         return (
@@ -44,11 +44,11 @@ export function CategoryTabs({ tabs }: { tabs: CategoryTab[] }) {
             type="button"
             onClick={() => toggle(tab.slug)}
             aria-pressed={isActive}
-            className="group flex flex-col items-center gap-2 focus:outline-none"
+            className="group flex flex-col items-center gap-1 focus:outline-none"
           >
             <span
               className={cn(
-                "relative h-20 w-20 sm:h-24 sm:w-24 rounded-xl overflow-hidden bg-white shadow-sm ring-1 transition-all duration-200",
+                "relative h-14 w-14 sm:h-16 sm:w-16 rounded-lg overflow-hidden bg-white shadow-sm ring-1 transition-all duration-200",
                 isActive
                   ? "ring-2 ring-jw-red shadow-md"
                   : "ring-jw-gray-200 group-hover:ring-jw-red/50 group-hover:shadow-md group-hover:scale-105"
@@ -58,7 +58,7 @@ export function CategoryTabs({ tabs }: { tabs: CategoryTab[] }) {
                 src={tab.image}
                 alt={tab.label}
                 fill
-                sizes="96px"
+                sizes="64px"
                 className="object-cover"
               />
               {isActive && (
@@ -67,7 +67,7 @@ export function CategoryTabs({ tabs }: { tabs: CategoryTab[] }) {
             </span>
             <span
               className={cn(
-                "text-xs sm:text-sm font-semibold transition-colors",
+                "text-[10px] sm:text-xs font-semibold transition-colors",
                 isActive ? "text-jw-red" : "text-jw-black group-hover:text-jw-red"
               )}
             >

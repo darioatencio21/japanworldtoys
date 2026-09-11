@@ -35,7 +35,7 @@ export default async function AdminDashboardPage() {
       prisma.product.findMany({
         include: { marca: true, categoria: true, imagenes: { orderBy: { orden: "asc" }, take: 1 } },
         orderBy: { createdAt: "desc" },
-        take: 8,
+        take: 6,
       }),
     ]);
 
@@ -45,19 +45,19 @@ export default async function AdminDashboardPage() {
 
   const kpis = [
     {
-      image: "/images/icons/dinero.png",
+      image: "/images/icons/dinero.webp",
       label: "Ventas totales",
       value: formatPrice(revenue),
       sub: `${formatPrice(todayRevenue)} hoy`,
     },
     {
-      image: "/images/icons/rendimiento.png",
+      image: "/images/icons/rendimiento.webp",
       label: "Ticket promedio",
       value: formatPrice(avgTicket),
       sub: "por pedido pagado",
     },
     {
-      image: "/images/icons/productos.png",
+      image: "/images/icons/productos.webp",
       label: "Productos",
       value: String(productCount),
       sub: `${lowStockCount} con stock bajo`,
@@ -85,9 +85,12 @@ export default async function AdminDashboardPage() {
       </p>
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {kpis.map((kpi) => (
-          <div key={kpi.label} className="bg-jw-black rounded-2xl border-4 border-jw-red p-5">
+          <div
+            key={kpi.label}
+            className="relative min-w-0 max-w-full overflow-hidden bg-jw-black rounded-2xl border-4 border-jw-red p-5"
+          >
             <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center mb-3 overflow-hidden shadow-sm">
               <img
                 src={kpi.image}
@@ -164,7 +167,7 @@ export default async function AdminDashboardPage() {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-jw-black truncate max-w-[280px]">
+                      <p className="text-sm font-semibold text-jw-black truncate">
                         {product.nombre}
                       </p>
                       <p className="text-xs text-jw-gray-500">

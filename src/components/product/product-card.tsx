@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/utils";
 import { cn } from "@/lib/utils";
-import { Heart, Eye, ShoppingCart } from "lucide-react";
+import { Eye, ShoppingCart } from "lucide-react";
 import { ProductGalleryModal } from "./product-gallery";
 
 export type ProductCardData = {
@@ -37,7 +37,6 @@ export function ProductCard({
   className?: string;
 }) {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
   const [isAdded, setIsAdded] = useState(false);
@@ -125,36 +124,13 @@ export function ProductCard({
             </div>
           )}
 
-          {/* Wishlist */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setIsWishlisted(!isWishlisted);
-            }}
-            className={cn(
-              "absolute top-2 right-2 md:top-3 md:right-3 z-10 h-8 w-8 rounded-full flex items-center justify-center transition-all duration-200",
-              "bg-white/85 backdrop-blur-sm shadow-sm hover:bg-white hover:scale-110",
-              "hidden md:flex",
-              "opacity-0 group-hover:opacity-100 focus:opacity-100",
-              isWishlisted && "opacity-100 md:opacity-100"
-            )}
-            aria-label={isWishlisted ? "Quitar de favoritos" : "Agregar a favoritos"}
-          >
-            <Heart
-              className={cn(
-                "h-4 w-4 transition-colors",
-                isWishlisted ? "text-jw-red fill-jw-red" : "text-jw-gray-500"
-              )}
-            />
-          </button>
-
           {/* Quick View */}
           <button
             onClick={(e) => {
               e.preventDefault();
               setIsQuickViewOpen(true);
             }}
-            className="hidden md:flex absolute top-3 right-12 z-10 h-8 w-8 rounded-full bg-white/85 backdrop-blur-sm shadow-sm items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110"
+            className="hidden md:flex absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-white/85 backdrop-blur-sm shadow-sm items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110"
             aria-label="Vista rápida"
           >
             <Eye className="h-4 w-4 text-jw-gray-700" />

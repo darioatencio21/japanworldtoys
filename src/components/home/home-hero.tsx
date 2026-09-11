@@ -12,7 +12,7 @@ export type HeroSlide = {
   id: string;
   titulo: string;
   subtitulo: string | null;
-  imagenDesktop: string;
+  imagenDesktop: string | null;
   imagenMobile: string | null;
   textoCTA: string | null;
   linkCTA: string | null;
@@ -36,54 +36,78 @@ export function HomeHero({ slides }: { slides: HeroSlide[] }) {
 
   const go = (index: number) => setCurrent((index + total) % total);
   const slide = slides[current];
+  const mobile = slide.imagenMobile || slide.imagenDesktop;
+  const desktop = slide.imagenDesktop || slide.imagenMobile;
+  const both = mobile && desktop && mobile !== desktop;
+
+  if (!mobile && !desktop) return null;
 
   return (
-    <section className="relative overflow-hidden">
-      <div className="relative bg-gradient-to-r from-jw-red to-jw-red-dark transition-colors duration-500">
-        <div className="max-w-7xl mx-auto px-4 py-14 md:py-20 flex flex-col md:flex-row items-center gap-8">
-          <div className="flex-1 text-white z-10 text-center md:text-left">
-            <Badge variant="gold" className="mb-3">
-              {BADGES[current % BADGES.length]}
-            </Badge>
-            <h1 className="text-3xl md:text-5xl font-bold font-[family-name:var(--font-display)] leading-tight mb-4">
-              {slide.titulo}
-            </h1>
-            {slide.subtitulo && (
-              <p className="text-base md:text-lg text-white/80 mb-7 max-w-lg mx-auto md:mx-0">
-                {slide.subtitulo}
-              </p>
-            )}
-            {slide.linkCTA && (
-              <Button
-                size="xl"
-                variant="gold"
-                asChild
-                className={cn(!slide.textoCTA && "hidden")}
-              >
-                <Link href={slide.linkCTA} className="inline-flex items-center gap-2">
-                  {slide.textoCTA || "Ver más"}
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-              </Button>
-            )}
-          </div>
-
-          <div className="flex-1 relative h-48 md:h-72 w-full max-w-sm md:max-w-none">
+    <section className="relative overflow-hidden bg-jw-red">
+      <div className="relative h-[340px] sm:h-[400px] md:h-[460px] lg:h-[540px]">
+        {both ? (
+          <>
             <Image
-              src={slide.imagenDesktop}
+              src={mobile!}
               alt={slide.titulo}
               fill
               priority
-              className="object-contain drop-shadow-2xl"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover md:hidden"
+              sizes="100vw"
             />
+            <Image
+              src={desktop!}
+              alt={slide.titulo}
+              fill
+              priority
+              className="object-cover hidden md:block"
+              sizes="100vw"
+            />
+          </>
+        ) : (
+          (mobile || desktop) && (
+            <Image
+              src={(mobile || desktop)!}
+              alt={slide.titulo}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          )
+        )}
+
+        {/* Scrim para legibilidad del texto */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/70 md:via-black/25 md:to-transparent"
+        />
+
+        {/* Contenido */}
+        <div className="absolute inset-0 z-10">
+          <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end md:justify-center">
+            <div className="max-w-2xl pb-16 md:pb-0 md:pr-4">
+              <Badge variant="gold" className="mb-3">
+                {BADGES[current % BADGES.length]}
+              </Badge>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] leading-tight mb-4 drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
+                {slide.titulo}
+              </h1>
+              {slide.subtitulo && (
+                <p className="text-base sm:text-lg text-white/85 mb-6 md:mb-8 max-w-lg drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
+                  {slide.subtitulo}
+                </p>
+              )}
+              {slide.linkCTA && (
+                <Button size="xl" variant="gold" asChild>
+                  <Link href={slide.linkCTA} className="inline-flex items-center gap-2">
+                    {slide.textoCTA || "Ver más"}
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-        {/* Decorative pattern */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-10 left-10 w-32 h-32 border-2 border-white rounded-full" />
-          <div className="absolute bottom-10 right-20 w-48 h-48 border border-white rounded-full" />
-          <div className="absolute top-1/2 left-1/3 w-24 h-24 border border-white rotate-45" />
         </div>
       </div>
 

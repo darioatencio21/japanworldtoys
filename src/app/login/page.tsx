@@ -5,8 +5,7 @@ export default function LoginPage() {
     <div className="relative h-dvh flex items-center justify-center overflow-hidden">
       {/* Background image */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url(/images/backgrounds/fondo-panel-admin.png)" }}
+        className="absolute inset-0 bg-cover bg-center bg-[url('/images/backgrounds/fondo-panel-admin-mobile.webp')] md:bg-[url('/images/backgrounds/fondo-panel-admin.webp')]"
         aria-hidden="true"
       />
 

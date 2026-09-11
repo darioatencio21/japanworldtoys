@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +15,10 @@ import {
   ExternalLink,
   ArrowUp,
   ArrowDown,
+  Upload,
+  Loader2,
 } from "lucide-react";
+import { uploadImage } from "./image-upload-field";
 
 type ProductRow = {
   id: string;
@@ -112,6 +115,9 @@ const EMPTY_FORM: FormState = {
 
 const MAX_IMAGES = 4;
 
+// Máximo de productos visibles por defecto; el resto se ve con "Ver más"
+const PAGE_SIZE = 6;
+
 const INPUT_LIMITS = {
   nombre: 50,
   slug: 50,
@@ -165,6 +171,7 @@ export function ProductsManager({
   canDelete: boolean;
 }) {
   const [products, setProducts] = useState<ProductRow[]>(initialProducts);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [categoriesList, setCategoriesList] = useState<CategoriaOption[]>(categories);
   const [brandsList, setBrandsList] = useState<MarcaOption[]>(brands);
   const [franchisesList, setFranchisesList] = useState<FranquiciaOption[]>(franchises);
@@ -174,6 +181,8 @@ export function ProductsManager({
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -233,6 +242,25 @@ export function ProductsManager({
       next.splice(target, 0, item);
       return { ...prev, imagenes: next };
     });
+  };
+
+  const handleImageFile = async (index: number, file: File | undefined) => {
+    if (!file) return;
+    setUploadingIndex(index);
+    try {
+      const url = await uploadImage(file);
+      setForm((prev) => {
+        const next = [...prev.imagenes];
+        if (next[index]) next[index] = { ...next[index], url };
+        return { ...prev, imagenes: next };
+      });
+      toast.success("Imagen subida.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "No se pudo subir la imagen.");
+    } finally {
+      setUploadingIndex(null);
+      if (imageInputRef.current) imageInputRef.current.value = "";
+    }
   };
 
   const crearMarca = async (): Promise<string | null> => {
@@ -428,6 +456,39 @@ export function ProductsManager({
     }
   };
 
+  const renderActions = (product: ProductRow, className?: string) => (
+    <div className={cn("flex flex-shrink-0 items-center gap-1.5", className)}>
+      <a
+        href={`/producto/${product.slug}`}
+        target="_blank"
+        className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
+        aria-label="Ver producto"
+        title="Ver producto"
+      >
+        <ExternalLink className="h-4 w-4" />
+      </a>
+      <button
+        onClick={() => openEdit(product)}
+        className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
+        aria-label="Editar"
+        title="Editar"
+      >
+        <Pencil className="h-4 w-4" />
+      </button>
+      {canDelete && product.ventas === 0 && (
+        <button
+          onClick={() => handleDelete(product)}
+          disabled={isDeleting === product.id}
+          className="h-9 w-9 md:h-8 md:w-8 rounded-lg flex items-center justify-center text-jw-error hover:bg-jw-error/10 transition-colors disabled:opacity-50"
+          aria-label="Eliminar"
+          title="Eliminar"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+
   const filtered = query.trim()
     ? products.filter(
         (p) =>
@@ -435,6 +496,10 @@ export function ProductsManager({
           p.sku.toLowerCase().includes(query.toLowerCase())
       )
     : products;
+
+  // Solo se muestran PAGE_SIZE productos; "Ver más" revela de a 6
+  const visible = filtered.slice(0, visibleCount);
+  const hiddenCount = filtered.length - visible.length;
 
   const fieldClass =
     "flex h-11 w-full rounded-lg border border-jw-gray-300 bg-white px-3 py-2 text-sm text-jw-black transition-colors " +
@@ -458,7 +523,7 @@ export function ProductsManager({
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center gap-2 rounded-lg bg-jw-red text-white text-sm font-semibold px-4 h-11 hover:bg-jw-red-dark transition-colors"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-jw-red text-white text-sm font-semibold px-4 h-11 hover:bg-jw-red-dark transition-colors sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           Nuevo producto
@@ -471,11 +536,12 @@ export function ProductsManager({
           placeholder="Buscar por nombre o SKU..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          maxLength={70}
         />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-white border border-dashed border-jw-gray-300 rounded-2xl p-16 text-center">
+        <div className="bg-white border border-dashed border-jw-gray-300 rounded-2xl px-6 py-12 sm:p-16 text-center">
           <div className="mx-auto h-12 w-12 rounded-xl bg-jw-red/10 flex items-center justify-center mb-3">
             <ImageIcon className="h-6 w-6 text-jw-red" />
           </div>
@@ -489,8 +555,112 @@ export function ProductsManager({
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-jw-gray-200 overflow-x-auto">
-          <table className="w-full text-sm min-w-[900px]">
+        <>
+          {/* Mobile: tarjetas */}
+          <div className="md:hidden space-y-3">
+            {visible.map((product) => {
+              const badge = ESTADO_BADGES[product.estado] || {
+                variant: "default",
+                label: product.estado,
+              };
+              const img = product.imagenes[0];
+              return (
+                <div
+                  key={product.id}
+                  className="bg-white rounded-2xl border border-jw-gray-200 p-4"
+                >
+                  <div className="flex gap-3">
+                    <div className="h-16 w-16 rounded-xl bg-jw-gray-100 overflow-hidden flex-shrink-0 border border-jw-gray-200">
+                      {img ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={img.url}
+                          alt={img.alt || product.nombre}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center">
+                          <ImageIcon className="h-5 w-5 text-jw-gray-400" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="min-w-0 font-semibold text-jw-black text-sm leading-snug line-clamp-2">
+                              {product.nombre}
+                            </p>
+                            {product.destacado && (
+                              <Star className="h-3.5 w-3.5 text-jw-warning fill-jw-warning flex-shrink-0" />
+                            )}
+                            {product.esNovedad && (
+                              <Sparkles className="h-3.5 w-3.5 text-jw-red flex-shrink-0" />
+                            )}
+                          </div>
+                          <p className="text-xs text-jw-gray-500 mt-0.5 truncate">
+                            {product.sku}
+                            {product.marcaNombre ? ` · ${product.marcaNombre}` : ""}
+                          </p>
+                        </div>
+                        <Badge
+                          variant={badge.variant}
+                          className="flex-shrink-0 whitespace-nowrap"
+                        >
+                          {badge.label}
+                        </Badge>
+                      </div>
+
+                      <p className="text-xs text-jw-gray-500 mt-1.5 truncate">
+                        {product.categoriaPadre
+                          ? `${product.categoriaPadre} > ${product.categoriaNombre}`
+                          : product.categoriaNombre}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-end justify-between gap-3 mt-3 pt-3 border-t border-jw-gray-100">
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-jw-black">
+                        {formatPrice(product.precio)}
+                        {product.precioComparativo != null && (
+                          <span className="ml-2 text-[11px] text-jw-gray-400 line-through font-normal">
+                            {formatPrice(product.precioComparativo)}
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-xs mt-0.5">
+                        <span
+                          className={cn(
+                            "font-semibold",
+                            product.stock === 0
+                              ? "text-jw-error"
+                              : product.stock <= 5
+                                ? "text-jw-warning"
+                                : "text-jw-success"
+                          )}
+                        >
+                          {product.stock} u.
+                        </span>
+                        {product.ventas > 0 && (
+                          <span className="text-jw-gray-400">
+                            {" "}
+                            · {product.ventas} vendidos
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    {renderActions(product)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop: tabla */}
+          <div className="hidden md:block bg-white rounded-2xl border border-jw-gray-200 overflow-x-auto">
+            <table className="w-full text-sm min-w-[900px]">
             <thead>
               <tr className="border-b border-jw-gray-200 text-left text-xs text-jw-gray-500 uppercase tracking-wide">
                 <th className="px-4 py-3 font-semibold">Producto</th>
@@ -502,7 +672,7 @@ export function ProductsManager({
               </tr>
             </thead>
             <tbody className="divide-y divide-jw-gray-100">
-              {filtered.map((product) => {
+              {visible.map((product) => {
                 const badge = ESTADO_BADGES[product.estado] || {
                   variant: "default",
                   label: product.estado,
@@ -581,43 +751,26 @@ export function ProductsManager({
                       <Badge variant={badge.variant}>{badge.label}</Badge>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <a
-                          href={`/producto/${product.slug}`}
-                          target="_blank"
-                          className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
-                          aria-label="Ver producto"
-                          title="Ver producto"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                        <button
-                          onClick={() => openEdit(product)}
-                          className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-gray-600 hover:bg-jw-off-white transition-colors"
-                          aria-label="Editar"
-                          title="Editar"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        {canDelete && product.ventas === 0 && (
-                          <button
-                            onClick={() => handleDelete(product)}
-                            disabled={isDeleting === product.id}
-                            className="h-8 w-8 rounded-lg flex items-center justify-center text-jw-error hover:bg-jw-error/10 transition-colors"
-                            aria-label="Eliminar"
-                            title="Eliminar"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        )}
-                      </div>
+                      {renderActions(product, "justify-end")}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+
+          {hiddenCount > 0 && (
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                className="inline-flex h-11 px-6 items-center rounded-lg border border-jw-gray-300 bg-white text-sm font-semibold text-jw-black hover:border-jw-red hover:text-jw-red transition-colors"
+              >
+                Ver más ({hiddenCount} restantes)
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {isModalOpen && (
@@ -627,7 +780,7 @@ export function ProductsManager({
             onClick={() => setIsModalOpen(false)}
           />
           <div className="relative min-h-full flex items-center justify-center p-4">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90dvh] overflow-y-auto">
               <div className="flex items-center justify-between px-6 py-4 border-b border-jw-gray-200 sticky top-0 bg-white z-10">
                 <h2 className="text-lg font-bold font-[family-name:var(--font-display)] text-jw-black">
                   {editingId ? "Editar producto" : "Nuevo producto"}
@@ -989,16 +1142,37 @@ export function ProductsManager({
                                 )}
                               </div>
                               <div className="space-y-1.5">
-                                <input
-                                  className={fieldClass}
-                                  value={img.url}
-                                  onChange={(e) => {
-                                    const next = [...form.imagenes];
-                                    next[i] = { ...next[i], url: e.target.value };
-                                    setForm({ ...form, imagenes: next });
-                                  }}
-                                  placeholder="URL de la imagen"
-                                />
+                                <div className="flex gap-1.5">
+                                  <input
+                                    className={fieldClass}
+                                    value={img.url}
+                                    onChange={(e) => {
+                                      const next = [...form.imagenes];
+                                      next[i] = { ...next[i], url: e.target.value };
+                                      setForm({ ...form, imagenes: next });
+                                    }}
+                                    placeholder="URL de la imagen"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setUploadingIndex(i);
+                                      imageInputRef.current?.click();
+                                    }}
+                                    disabled={uploadingIndex !== null}
+                                    className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-jw-gray-300 bg-white px-2.5 h-11 text-xs font-semibold text-jw-gray-700 hover:bg-jw-off-white hover:border-jw-red transition-colors flex-shrink-0 disabled:opacity-50"
+                                    title="Subir imagen desde la PC"
+                                  >
+                                    {uploadingIndex === i ? (
+                                      <Loader2 className="h-4 w-4 animate-spin text-jw-red" />
+                                    ) : (
+                                      <Upload className="h-4 w-4 text-jw-red" />
+                                    )}
+                                    <span className="hidden sm:inline">
+                                      {uploadingIndex === i ? "Subiendo..." : "Subir"}
+                                    </span>
+                                  </button>
+                                </div>
                                 <input
                                   className={fieldClass}
                                   value={img.alt}
@@ -1062,6 +1236,16 @@ export function ProductsManager({
                   </div>
                 </div>
               </div>
+
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+                className="hidden"
+                onChange={(e) => {
+                  handleImageFile(uploadingIndex ?? 0, e.target.files?.[0]);
+                }}
+              />
 
               <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-jw-gray-200 sticky bottom-0 bg-white">
                 <button
