@@ -7,7 +7,9 @@ import {
   INSTAGRAM_URL,
   WHATSAPP_LINK,
 } from "@/lib/constants";
-import { MapPin, Mail, Phone, Instagram, MessageCircle, Target, Heart, Sparkles } from "lucide-react";
+import { MapPin, Mail, Phone } from "lucide-react";
+import Image from "next/image";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 
 export const metadata: Metadata = {
   title: `Nosotros · ${SITE_NAME}`,
@@ -18,17 +20,17 @@ export const metadata: Metadata = {
 export default function NosotrosPage() {
   const values = [
     {
-      icon: Target,
+      image: "/images/valores/nuestra-mision.png",
       title: "Nuestra misión",
       text: "Acercar el mejor manga, anime y coleccionables a Tucumán y todo el país, con asesoramiento cercano y productos originales.",
     },
     {
-      icon: Heart,
+      image: "/images/valores/pasion-por-el-fandom.png",
       title: "Pasión por el fandom",
       text: "Somos fans como vos. Entendemos lo que buscás y nos aseguramos de que cada figura o manga llegue en las mejores condiciones.",
     },
     {
-      icon: Sparkles,
+      image: "/images/valores/calidad.png",
       title: "Calidad garantizada",
       text: "Trabajamos con proveedores confiables para brindarte productos originales y de calidad, respaldados por atención real.",
     },
@@ -84,10 +86,14 @@ export default function NosotrosPage() {
           </h2>
           <div className="space-y-6">
             {values.map((v) => (
-              <div key={v.title} className="flex gap-4">
-                <div className="h-11 w-11 rounded-xl bg-jw-red/10 flex items-center justify-center flex-shrink-0">
-                  <v.icon className="h-5 w-5 text-jw-red" />
-                </div>
+              <div key={v.title} className="flex items-center gap-4">
+                <Image
+                  src={v.image}
+                  alt={v.title}
+                  width={72}
+                  height={72}
+                  className="h-18 w-18 flex-shrink-0 object-contain"
+                />
                 <div>
                   <h3 className="font-bold text-jw-black mb-1">{v.title}</h3>
                   <p className="text-sm text-jw-gray-600 leading-relaxed">{v.text}</p>
@@ -142,7 +148,7 @@ export default function NosotrosPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-[#25D366] text-white text-sm font-bold hover:brightness-95 transition-all shadow-lg"
           >
-            <MessageCircle className="h-5 w-5" />
+            <WhatsAppIcon className="h-5 w-5" />
             Escribinos por WhatsApp
           </a>
           <a
@@ -151,7 +157,13 @@ export default function NosotrosPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-jw-black text-white text-sm font-bold hover:bg-jw-gray-700 transition-colors shadow-lg"
           >
-            <Instagram className="h-5 w-5" />
+            <Image
+              src="/images/icons/logo-instagram.png"
+              alt="Instagram"
+              width={20}
+              height={20}
+              className="h-5 w-5 object-contain"
+            />
             Seguinos en Instagram
           </a>
         </div>

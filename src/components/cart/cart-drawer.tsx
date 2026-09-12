@@ -7,7 +7,8 @@ import { useCartStore } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
-import { X, Plus, Minus, Trash2, ShoppingBag, MessageCircle } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
+import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 
 export function CartDrawer() {
   const pathname = usePathname();
@@ -182,7 +183,7 @@ export function CartDrawer() {
               data-wa
               onClick={handleWhatsApp}
             >
-              <MessageCircle className="h-5 w-5" />
+              <WhatsAppIcon className="h-5 w-5" />
               Comprar por WhatsApp
             </Button>
           </div>

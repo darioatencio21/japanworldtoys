@@ -6,6 +6,7 @@ import { useCartStore } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import {
   X,
   Plus,
@@ -13,7 +14,6 @@ import {
   Trash2,
   ShoppingBag,
   ArrowRight,
-  MessageCircle,
   Truck,
   Store,
   Shield,
@@ -197,7 +197,7 @@ export default function CartPage() {
               data-wa
               onClick={handleWhatsApp}
             >
-              <MessageCircle className="h-5 w-5" />
+              <WhatsAppIcon className="h-5 w-5" />
               Comprar por WhatsApp
             </Button>
 

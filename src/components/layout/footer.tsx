@@ -12,13 +12,12 @@ import {
   WHATSAPP_LINK,
 } from "@/lib/constants";
 import {
-  Instagram,
-  MessageCircle,
   Mail,
   MapPin,
   Phone,
   ChevronDown,
 } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { cn } from "@/lib/utils";
 
 const footerLinks = {
@@ -198,19 +197,25 @@ export function Footer() {
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-jw-red transition-colors"
+                className="h-10 w-10 rounded-lg flex items-center justify-center transition-transform hover:scale-110"
                 aria-label="Instagram"
               >
-                <Instagram className="h-5 w-5" />
+                <Image
+                  src="/images/icons/logo-instagram.png"
+                  alt="Instagram"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-contain"
+                />
               </a>
               <a
                 href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-[#25D366] transition-colors"
+                className="h-10 w-10 rounded-lg flex items-center justify-center transition-transform hover:scale-110"
                 aria-label="WhatsApp"
               >
-                <MessageCircle className="h-5 w-5" />
+                <WhatsAppIcon className="h-full w-full rounded-lg" />
               </a>
             </div>
           </div>

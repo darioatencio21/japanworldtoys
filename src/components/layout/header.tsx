@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
 import { NAV_ITEMS, SITE_NAME, WHATSAPP_LINK } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { MegaMenu } from "./mega-menu";
 import { TopBar } from "./top-bar";
 import {
@@ -20,7 +21,6 @@ import {
   Sparkles,
   Home,
   Store,
-  MessageCircle,
 } from "lucide-react";
 
 export function Header() {
@@ -92,9 +92,9 @@ export function Header() {
                 rel="noopener noreferrer"
                 aria-label="Contactanos por WhatsApp"
                 title="¡Escribinos por WhatsApp!"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#25D366] text-white shadow-md transition-transform hover:scale-110 sm:h-10 sm:w-10"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full shadow-md transition-transform hover:scale-110 sm:h-10 sm:w-10"
               >
-                <MessageCircle className="h-5 w-5" />
+                <WhatsAppIcon className="h-full w-full" />
               </a>
               <Button
                 variant="ghost"

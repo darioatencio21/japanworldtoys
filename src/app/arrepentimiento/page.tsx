@@ -6,7 +6,6 @@ import {
   RefreshCcw,
   Loader2,
   CheckCircle2,
-  MessageCircle,
   Mail,
   ShieldCheck,
   Clock3,
@@ -14,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { STORE_CONTACT } from "@/lib/constants";
 
 type FormState = {
@@ -100,7 +100,7 @@ export default function ArrepentimientoPage() {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 h-12 rounded-lg bg-jw-success text-white text-sm font-semibold hover:opacity-90 transition-opacity"
             >
-              <MessageCircle className="h-5 w-5" />
+              <WhatsAppIcon className="h-5 w-5" />
               Seguir por WhatsApp
             </a>
             <a

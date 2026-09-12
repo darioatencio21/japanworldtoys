@@ -6,6 +6,7 @@ import path from "node:path";
 import { prisma } from "@/lib/prisma";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { SITE_NAME } from "@/lib/constants";
+import { MoveRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -49,13 +50,24 @@ export default async function FranchisesPage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <Breadcrumb items={[{ label: "Inicio", href: "/" }, { label: "Franquicias" }]} />
 
-      <div className="mt-4 mb-10">
-        <h1 className="text-3xl font-bold font-[family-name:var(--font-display)] text-jw-black">
-          Franquicias
-        </h1>
-        <p className="text-jw-gray-500 mt-2">
-          Explorá todas nuestras colecciones por franquicia.
-        </p>
+      {/* Header */}
+      <div className="mt-6 mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div>
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-jw-red mb-3">
+            <span className="h-px w-10 bg-jw-red" />
+            Colecciones
+          </span>
+          <h1 className="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] text-jw-black">
+            Franquicias
+          </h1>
+          <p className="text-jw-gray-500 mt-2 max-w-xl">
+            Explorá todas nuestras colecciones por franquicia.
+          </p>
+        </div>
+        <span className="shrink-0 self-start md:self-auto inline-flex items-center gap-2 rounded-full bg-jw-off-white border border-jw-gray-200 px-4 py-2 text-sm font-medium text-jw-gray-700">
+          <span className="h-2 w-2 rounded-full bg-jw-red animate-pulse" />
+          {cards.length} {cards.length === 1 ? "franquicia" : "franquicias"}
+        </span>
       </div>
 
       {franchises.length === 0 ? (
@@ -73,60 +85,83 @@ export default async function FranchisesPage() {
           {cards.map((f) => {
             const mobile = f.imagenMobile || f.imagen;
             const desktop = f.imagen || f.imagenMobile;
+            const hasProducts = f._count.productos > 0;
             return (
-            <Link
-              key={f.id}
-              href={`/franquicia/${f.slug}`}
-              className="group relative flex flex-col justify-end min-h-[150px] md:min-h-[170px] rounded-xl overflow-hidden p-4 text-white transition-transform hover:scale-[1.02]"
-              style={{
-                background: `linear-gradient(135deg, ${f.color || "#E10600"} 0%, #0E0E0F 100%)`,
-              }}
-            >
-              {mobile && (
-                <Image
-                  src={mobile}
-                  alt=""
-                  fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover md:hidden"
-                />
-              )}
-              {desktop && (
-                <Image
-                  src={desktop}
-                  alt=""
-                  fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover hidden md:block"
-                />
-              )}
-              {(mobile || desktop) && (
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/15"
-                />
-              )}
-              <div className="relative z-10">
-              <span className="text-xs uppercase tracking-[0.15em] text-white/60 font-bold mb-1">
-                Colección
-              </span>
-              <span className="text-lg font-bold font-[family-name:var(--font-display)] leading-tight">
-                {f.nombre}
-              </span>
-              <span className="text-xs text-white/75 mt-1">
-                {f._count.productos}{" "}
-                {f._count.productos === 1 ? "producto" : "productos"}
-              </span>
-              {f.mensaje && (
-                <span className="text-[11px] leading-snug text-white/70 mt-1 line-clamp-2">
-                  {f.mensaje}
+              <Link
+                key={f.id}
+                href={`/franquicia/${f.slug}`}
+                className="group relative flex flex-col justify-end aspect-[4/5] min-h-[200px] rounded-2xl overflow-hidden p-4 md:p-5 text-white shadow-md ring-1 ring-black/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jw-red focus-visible:ring-offset-2"
+                style={{
+                  background: `linear-gradient(160deg, ${f.color || "#E10600"} 0%, #0E0E0F 90%)`,
+                }}
+              >
+                {mobile && (
+                  <Image
+                    src={mobile}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] md:hidden"
+                  />
+                )}
+                {desktop && (
+                  <Image
+                    src={desktop}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] hidden md:block"
+                  />
+                )}
+                {(mobile || desktop) && (
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10"
+                  />
+                )}
+
+                {/* Letra decorativa para franquicias sin imagen */}
+                {!(mobile || desktop) && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -right-3 -bottom-8 select-none text-[130px] leading-none font-bold text-white/10 font-[family-name:var(--font-display)]"
+                  >
+                    {f.nombre.charAt(0)}
+                  </span>
+                )}
+
+                {/* Badge "Ver" siempre visible */}
+                <span className="absolute right-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 px-2.5 py-1 text-[11px] font-semibold text-white transition-all duration-300 group-hover:bg-white group-hover:text-jw-black">
+                  Ver
+                  <MoveRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
                 </span>
-              )}
-              </div>
-              <span className="absolute right-3 top-3 z-10 text-xs font-semibold px-2 py-0.5 rounded-full bg-white/15 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                Ver →
-              </span>
-            </Link>
+
+                {/* Badge para franquicias sin productos */}
+                {!hasProducts && (
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-jw-gold px-2.5 py-1 text-[11px] font-bold text-jw-black">
+                    Próximamente
+                  </span>
+                )}
+
+                <div className="relative z-10">
+                  <span className="block text-[10px] uppercase tracking-[0.2em] text-jw-gold font-bold mb-1.5">
+                    Colección
+                  </span>
+                  <h2 className="text-lg md:text-xl leading-tight font-bold font-[family-name:var(--font-display)] line-clamp-2">
+                    {f.nombre}
+                  </h2>
+                  <span className="mt-2 block text-xs font-medium text-white/80">
+                    {hasProducts
+                      ? `${f._count.productos} ${f._count.productos === 1 ? "producto" : "productos"}`
+                      : "En camino"}
+                  </span>
+                  {f.mensaje && (
+                    <span className="mt-1.5 hidden md:block text-[11px] leading-snug text-white/70 line-clamp-2">
+                      {f.mensaje}
+                    </span>
+                  )}
+                </div>
+              </Link>
             );
           })}
         </div>

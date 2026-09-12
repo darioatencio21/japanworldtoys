@@ -13,10 +13,10 @@ import {
   Store,
   Handshake,
   ArrowLeft,
-  MessageCircle,
   AlertCircle,
 } from "lucide-react";
 import { WHATSAPP_LINK } from "@/lib/constants";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 
 export const dynamic = "force-dynamic";
 
@@ -271,7 +271,7 @@ export default async function OrderDetailPage({
 
           <Button variant="outline" className="w-full" asChild>
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="h-5 w-5 text-jw-success" />
+              <WhatsAppIcon className="h-5 w-5" />
               Consultar por WhatsApp
             </a>
           </Button>

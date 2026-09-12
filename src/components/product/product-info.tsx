@@ -13,10 +13,10 @@ import {
   Store,
   CreditCard,
   Shield,
-  MessageCircle,
   Check,
 } from "lucide-react";
 import { WHATSAPP_LINK, INSTAGRAM_URL } from "@/lib/constants";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { cn } from "@/lib/utils";
 
 interface ReviewData {
@@ -244,7 +244,7 @@ export function ProductInfo({
 
         <Button variant="outline" size="lg" asChild className="w-full">
           <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-            <MessageCircle className="h-5 w-5 text-jw-success" />
+            <WhatsAppIcon className="h-5 w-5 text-jw-success" />
             Consultar
           </a>
         </Button>

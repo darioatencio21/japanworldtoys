@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/product/product-card";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { WHATSAPP_LINK } from "@/lib/constants";
-import { MessageCircle } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 
 export const dynamic = "force-dynamic";
 
@@ -143,7 +143,7 @@ export default async function FranchisePage({
             rel="noopener noreferrer"
             className="mt-5 inline-flex items-center gap-2 h-11 px-6 rounded-lg bg-white text-jw-black text-sm font-semibold hover:bg-jw-off-white transition-colors"
           >
-            <MessageCircle className="h-4 w-4 text-jw-success" />
+            <WhatsAppIcon className="h-4 w-4" />
             Pedinos lo que falte por WhatsApp
           </a>
         </div>
